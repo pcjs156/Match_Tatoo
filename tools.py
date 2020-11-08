@@ -1,5 +1,7 @@
 import json, sys
 
+
+#JSON 받아옴
 def json_to_dict(filename: str, *keys):
     try:
         ret = dict()
@@ -19,3 +21,10 @@ def json_to_dict(filename: str, *keys):
             sys.exit()
 
     return ret
+
+# 파일을 저장할 디렉토리의 이름을 날짜 기반으로 정해줌
+def date_upload_to(instance, filename):
+    ymd_path = timezone.now().strftime('%Y/%m/%d')
+    uuid_name = uuid4().hex
+    extension = os.path.splitext(filename)[-1].lower()
+    return '/'.join([ymd_path, uuid_name + extension])

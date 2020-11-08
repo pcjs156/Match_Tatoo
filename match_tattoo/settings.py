@@ -13,6 +13,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+AUTH_USER_MODEL = 'accountApp.Customer'
+
 # Application definition
 
 # 3rd party package를 Django로 가져오는 경우
