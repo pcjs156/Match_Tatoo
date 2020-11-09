@@ -16,7 +16,7 @@ class Portfolio(models.Model):
     author = models.ForeignKey(Customer, on_delete=models.CASCADE, null=False, blank=False, related_name="portfolio_author", verbose_name="포트폴리오 작성자")
     
     # 사진
-    portfolio_image = models.ImageField(upload_to="tattooistApp/profile_image", blank=False, null=False, verbose_name="포트폴리오 사진")
+    portfolio_image = models.ImageField(upload_to=date_upload_to, blank=False, null=False, verbose_name="포트폴리오 사진")
 
     # 작성일
     pub_date = models.DateTimeField(auto_now_add=True, verbose_name="작성일")
@@ -49,7 +49,7 @@ class Review(models.Model):
     score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=5, verbose_name="별점")
 
     # 사진
-    review_image = models.ImageField(upload_to="tattooistApp/review_image", default="tattoistApp/review_image/default_review_image.png", blank=True, null=False, verbose_name="리뷰 사진")
+    review_image = models.ImageField(upload_to=date_upload_to, default="tattoistApp/review_image/default_review_image.png", blank=True, null=False, verbose_name="리뷰 사진")
 
     # 본문
     description = models.TextField(null=False, blank=True, default="",verbose_name="리뷰 본문")
