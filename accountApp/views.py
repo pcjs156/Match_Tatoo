@@ -1,5 +1,8 @@
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+
+from accountApp.forms import UserLoginForm
 
 
 # 로그인이 이미 되어 있는데 로그인을 시도하는 경우 이동되는 페이지
@@ -11,6 +14,7 @@ def already_logged_in_view(request):
     else:
         return redirect("main")
 
+
 # 로그인 페이지
 # 이미 로그인한 상태인지 확인해야 함 (else : already_logged_in_view)
 # account/login
@@ -19,7 +23,25 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect("already_logged_in")
 
-    return render(request, "login.html")
+    if request.method == "POST":
+        form = UserLoginForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(request=request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect("main")
+
+    else:
+        form = UserLoginForm()
+        return render(request, 'login.html', {'form': form})
+
+
+def __logout(request):
+    logout(request)
+    return redirect("main")
 
 
 # 마이페이지
