@@ -24,6 +24,9 @@
 
 <body>
     <nav style="text-align: right;">
+        <div>
+            <a href="{% url 'main' %}">MAIN</a>
+        </div>
         {% if request.user.is_authenticated %}
         <span>접속한 유저: {{ request.user.username }}
             [
@@ -39,7 +42,12 @@
             <a href="{% url 'logout' %}">로그아웃</a>
         </span>
         {% else %}
-        <a href="{% url 'login' %}"><span>로그인</span></a>
+        <div>
+            <a href="{% url 'login' %}"><span>로그인</span></a>
+        </div>
+        <div>
+            <a href="{% url 'select_user_type' %}">회원가입</a>
+        </div>
         {% endif %}
     </nav>
     <hr>

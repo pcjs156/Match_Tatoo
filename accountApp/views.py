@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from accountApp.forms import UserLoginForm
+from accountApp.forms import UserLoginForm, CustomerSignUpForm
+from accountApp.tools import UserSignupChecker, TattooistSignUpForm
 
 
 # 로그인이 이미 되어 있는데 로그인을 시도하는 경우 이동되는 페이지
@@ -70,7 +71,31 @@ def signup_customer_view(request):
     if request.user.is_authenticated:
         return redirect("already_logged_in")
 
-    return render(request, "signup_customer.html")
+    content = dict()
+
+    if request.method == 'POST':
+        form = CustomerSignUpForm(request.POST, request.FILES)
+        validity_checker = UserSignupChecker(form)
+        content["validity_check"] = validity_checker
+
+        # 만약 False가 validity_check_dict.values에 있다면
+        # 뭔가 문제가 생긴 것임으로 다시 입력해야 함
+        if not validity_checker.is_valid():
+            # 입력한 정보가 담겨 있는 form으로 갱신
+            content["form"] = CustomerSignUpForm(request.POST, request.FILES)
+            return render(request, 'signup_customer.html', content)
+
+        else:
+            user = form.save()
+            user.save()
+            login(request, user)
+            return redirect("main")
+
+    else:
+        form = CustomerSignUpForm()
+        content["form"] = form
+        content["validity_check"] = UserSignupChecker(form, default=True)
+        return render(request, 'signup_customer.html', content)
 
 
 # 시술자(tattooist) 회원가입 페이지
@@ -81,4 +106,28 @@ def signup_tattooist_view(request):
     if request.user.is_authenticated:
         return redirect("already_logged_in")
 
-    return render(request, "signup_tattooist.html")
+    content = dict()
+
+    if request.method == 'POST':
+        form = TattooistSignUpForm(request.POST, request.FILES)
+        validity_checker = UserSignupChecker(form)
+        content["validity_check"] = validity_checker
+
+        # 만약 False가 validity_check_dict.values에 있다면
+        # 뭔가 문제가 생긴 것임으로 다시 입력해야 함
+        if not validity_checker.is_valid():
+            # 입력한 정보가 담겨 있는 form으로 갱신
+            content["form"] = TattooistSignUpForm(request.POST, request.FILES)
+            return render(request, 'signup_tattooist.html', content)
+
+        else:
+            user = form.save()
+            user.save()
+            login(request, user)
+            return redirect("main")
+
+    else:
+        form = TattooistSignUpForm()
+        content["form"] = form
+        content["validity_check"] = UserSignupChecker(form, default=True)
+        return render(request, 'signup_tattooist.html', content)

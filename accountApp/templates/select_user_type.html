@@ -11,6 +11,10 @@ SELECT ACCOUNT TYPE
 
 {% block content %}
 <section>
-
+    <p>유저 유형을 정해주세요.</p>
+    <ul>
+        <li><a href="{% url 'signup_customer' %}">문신 하고 싶어요</a></li>
+        <li><a href="{% url 'signup_tattooist' %}">모델을 구하고 싶어요</a></li>
+    </ul>
 </section>
 {% endblock %}
