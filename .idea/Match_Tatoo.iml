@@ -13,11 +13,29 @@
     </facet>
   </component>
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/accountApp/static" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/mainApp/static" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/matchingApp/static" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/media" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/static" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/tattooistApp/static" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/.vscode" />
+    </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (web_venv) (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/accountApp/templates" />
+        <option value="$MODULE_DIR$/mainApp/templates" />
+        <option value="$MODULE_DIR$/matchingApp/templates" />
+        <option value="$MODULE_DIR$/tattooistApp/templates" />
+        <option value="$MODULE_DIR$/templates" />
+      </list>
+    </option>
   </component>
 </module>

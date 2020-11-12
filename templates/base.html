@@ -23,6 +23,34 @@
 </head>
 
 <body>
+    <nav style="text-align: right;">
+        <div>
+            <a href="{% url 'main' %}">MAIN</a>
+        </div>
+        {% if request.user.is_authenticated %}
+        <span>접속한 유저: {{ request.user.username }}
+            [
+                {% if request.user.nickname %}
+                {{request.user.nickname }}
+                {% else %}
+                <span style="color: red;">ERROR: 닉네임 미설정</span>
+                {% endif %}
+            ]
+        </span>
+        /
+        <span>
+            <a href="{% url 'logout' %}">로그아웃</a>
+        </span>
+        {% else %}
+        <div>
+            <a href="{% url 'login' %}"><span>로그인</span></a>
+        </div>
+        <div>
+            <a href="{% url 'select_user_type' %}">회원가입</a>
+        </div>
+        {% endif %}
+    </nav>
+    <hr>
     {% block content %}
     {% endblock %}
 </body>
