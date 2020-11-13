@@ -30,7 +30,11 @@ MATCHING LIST
             <tr>
                 <td>{{ matching.pub_date }}</td>
                 <td>{{ matching.author.nickname }}</td>
-                <td>{{ matching.title }}</td>
+                <td>
+                    <a href="{% url 'detail_matching' tattooist_id=matching.author.id matching_id=matching.id %}">
+                        {{ matching.title }}
+                    </a>
+                </td>
                 <td>{{ matching.get_region }} {{ matching.get_region_detail }}</td>
                 <td>{{ matching.get_tattoo_type }}</td>
                 <td>{{ matching.get_part }}</td>

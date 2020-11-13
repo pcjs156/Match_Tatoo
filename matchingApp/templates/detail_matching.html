@@ -11,6 +11,20 @@
 
 {% block content %}
 <section>
+    <p>작성자: {{ tattooist.nickname }}</p>
+    <p>작성일: {{ matching.pub_date }}</p>
 
+    <p>제목: {{ matching.title }}</p>
+    <p>지역: {{ matching.get_region }} {{ matching.region_detail }}</p>
+    <p>부위: {{ matching.get_part }}</p>
+    <p>유형: {{ matching.get_tattoo_type }}</p>
+    <p>가격: {{ matching.price }}원</p>
+    <p>
+        <p>본문</p>
+        <p>{{ matching.description }}</p>
+    </p>
+
+    <br>
+    <p><a href={% url "matching_list" %}>목록으로 가기</a></p>
 </section>
 {% endblock %}

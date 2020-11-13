@@ -3,16 +3,26 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
+from accountApp.models import Customer
 from .models import Matching
-from .forms import MatchingCreateForm
+from .forms import MatchingForm
 
 from tools import reversed_dict, parse_dict_from_code_pair
 from .tools import searching_keyword_validation
 
+
 # matching 디테일 페이지
 # matching/detail_matching/<tattooist_id: int>/<matching_id: int>
-def detail_matching_view(request, tatooist_id: int, matching_id: int):
-    return render(request, "detail_matching.html")
+def detail_matching_view(request, tattooist_id: int, matching_id: int):
+    content = dict()
+
+    tattooist = Customer.objects.get(id=tattooist_id)
+    content["tattooist"] = tattooist
+
+    matching = Matching.objects.get(pk=matching_id)
+    content["matching"] = matching
+
+    return render(request, "detail_matching.html", content)
 
 
 # customer가 tattooist만 접근 가능한 기능에 접근하는 경우
@@ -88,7 +98,7 @@ def create_matching_view(request):
     content["error"] = False
 
     if request.method == "POST":
-        form = MatchingCreateForm(request.POST)
+        form = MatchingForm(request.POST)
 
         if form.is_valid() and request.POST["region"] != "R0":
             matching: Matching = form.save(commit=False)
@@ -102,7 +112,7 @@ def create_matching_view(request):
             return render(request, "create_matching.html", content)
 
     else:
-        form = MatchingCreateForm()
+        form = MatchingForm()
         content["form"] = form
         return render(request, "create_matching.html", content)
 
