@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.utils.datastructures import MultiValueDictKeyError
 
 from django.shortcuts import render, redirect
@@ -21,6 +23,9 @@ def detail_matching_view(request, tattooist_id: int, matching_id: int):
 
     matching = Matching.objects.get(pk=matching_id)
     content["matching"] = matching
+
+    is_author = request.user.is_authenticated and request.user.id == tattooist_id
+    content["is_author"] = is_author
 
     return render(request, "detail_matching.html", content)
 
@@ -122,4 +127,40 @@ def create_matching_view(request):
 # matching/modify_matching/<tattooist_id: int>/<matching_id: int>
 @login_required(login_url="/account/login")
 def modify_matching_view(request, tattooist_id: int, matching_id: int):
-    return render(request, "modify_mathching.html")
+    matching = Matching.objects.get(pk=matching_id)
+
+    # 만약 로그인하지 않았거나, 작성자가 아닌 경우
+    if not request.user.is_authenticated or request.user.id != matching.author.id:
+        return redirect("customer_request_rejected")
+
+    content = dict()
+    content["error"] = False
+
+    if request.method == "POST":
+        form = MatchingForm(request.POST)
+
+        if form.is_valid() and request.POST["region"] != "R0":
+            updated_matching = form.save(commit=False)
+
+            matching.title = updated_matching.title
+            matching.region = updated_matching.region
+            matching.region_detail = updated_matching.region_detail
+            matching.tattoo_type = updated_matching.tattoo_type
+            matching.part = updated_matching.part
+            matching.price = updated_matching.price
+            matching.description = updated_matching.description
+            matching.pub_date = datetime.now()
+
+            matching.save()
+
+            return redirect("detail_matching", tattooist_id, matching_id)
+        else:
+            content["error"] = True
+            content["form"] = form
+            print(form)
+            return render(request, "modify_matching.html", content)
+
+    else:
+        form = MatchingForm(instance=matching)
+        content["form"] = form
+        return render(request, "modify_matching.html", content)

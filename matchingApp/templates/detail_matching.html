@@ -25,6 +25,9 @@
     </p>
 
     <br>
+    {% if is_author %}
+        <p><a href={% url "modify_matching" tattooist_id=matching.author.id matching_id=matching.id %}>수정하기</a></p>
+    {% endif %}
     <p><a href={% url "matching_list" %}>목록으로 가기</a></p>
 </section>
 {% endblock %}
