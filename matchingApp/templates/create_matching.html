@@ -11,6 +11,52 @@ NEW MATCHING POST
 
 {% block content %}
 <section>
+    {% if error %}
+    <p>잘못된 입력값입니다!</p>
+    <ol>
+        <li>제목, 지역 상세, 가격이 입력되어야 합니다.</li>
+        <li>지역 정보가 정상적으로 입력되어야 합니다.</li>
+    </ol>
+    {% endif %}
 
+    <form method="POST">
+        {% csrf_token %}
+        <p>
+            <p>제목</p>
+            <p>{{ form.title }}</p>
+        </p>
+
+        <p>
+            <p>지역</p>
+            <p>{{ form.region }}</p>
+        </p>
+
+        <p>
+            <p>지역 상세</p>
+            <p>{{ form.region_detail }}</p>
+        </p>
+
+        <p>
+            <p>타투 유형</p>
+            <p>{{ form.tattoo_type }}</p>
+        </p>
+
+        <p>
+            <p>타투 부위</p>
+            <p>{{ form.part }}</p>
+        </p>
+
+        <p>
+            <p>가격</p>
+            <p>{{ form.price }}</p>
+        </p>
+
+        <p>
+            <p>매칭 본문</p>
+            <p>{{ form.description }}</p>
+        </p>
+
+        <input type="submit" value="작성 완료">
+    </form>
 </section>
 {% endblock %}

@@ -16,6 +16,7 @@ MATCHING LIST
             <tr>
                 <th>작성일</th>
                 <th>작성자</th>
+                <th>제목</th>
                 <th>지역</th>
                 <th>유형</th>
                 <th>부위</th>
@@ -29,7 +30,8 @@ MATCHING LIST
             <tr>
                 <td>{{ matching.pub_date }}</td>
                 <td>{{ matching.author.nickname }}</td>
-                <td>{{ matching.get_region }}</td>
+                <td>{{ matching.title }}</td>
+                <td>{{ matching.get_region }} {{ matching.get_region_detail }}</td>
                 <td>{{ matching.get_tattoo_type }}</td>
                 <td>{{ matching.get_part }}</td>
                 <td>{{ matching.price }}</td>
@@ -43,5 +45,9 @@ MATCHING LIST
         {% endif %}
         </tbody>
     </table>
+
+    {% if is_tattooist %}
+        <a href="{% url 'create_matching' %}">매칭 작성하기</a>
+    {% endif %}
 </section>
 {% endblock %}

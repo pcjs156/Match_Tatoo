@@ -1,9 +1,11 @@
 from django.utils.datastructures import MultiValueDictKeyError
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import Matching
+from .forms import MatchingCreateForm
+
 from tools import reversed_dict, parse_dict_from_code_pair
 from .tools import searching_keyword_validation
 
@@ -13,10 +15,16 @@ def detail_matching_view(request, tatooist_id: int, matching_id: int):
     return render(request, "detail_matching.html")
 
 
+# customer가 tattooist만 접근 가능한 기능에 접근하는 경우
+def customer_request_rejected_view(request):
+    return render(request, "customer_request_rejected.html")
+
+
 # 조건에 맞는 matching의 리스트를 pagination으로 보여주는 페이지
 # matching/matching_list?region=인천&type=미니타투&part=목&order-by=price(또는 pub-date)
 def matching_list_view(request):
     content = dict()
+    content["is_tattooist"] = (request.user.is_authenticated) and (request.user.is_tattooist)
 
     try:
         region = request.GET["region"]     # 지역
@@ -72,7 +80,31 @@ def matching_list_view(request):
 # matching/create_matching
 @login_required(login_url="/account/login")
 def create_matching_view(request):
-    return render(request, "create_matching.html")
+    # 로그인 하지 않았거나, 타투이스트가 아닌 사용자가 접근할 경우
+    if not request.user.is_authenticated or not request.user.is_tattooist:
+        return redirect("customer_request_rejected")
+
+    content = dict()
+    content["error"] = False
+
+    if request.method == "POST":
+        form = MatchingCreateForm(request.POST)
+
+        if form.is_valid() and request.POST["region"] != "R0":
+            matching: Matching = form.save(commit=False)
+            matching.author = request.user
+            matching.save()
+            print(matching.region)
+            return redirect("matching_list")
+        else:
+            content["error"] = True
+            content["form"] = form
+            return render(request, "create_matching.html", content)
+
+    else:
+        form = MatchingCreateForm()
+        content["form"] = form
+        return render(request, "create_matching.html", content)
 
 
 # matching 수정 페이지

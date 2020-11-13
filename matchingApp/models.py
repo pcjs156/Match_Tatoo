@@ -8,6 +8,9 @@ class Matching(models.Model):
     class Meta:
         verbose_name = "매칭 게시글"
 
+    # 매칭 제목
+    title = models.CharField(max_length=50, null=False, blank=False, verbose_name="매칭 제목")
+
     # 매칭 작성자
     author = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=False,
                                related_name="matching_author_tattooist", verbose_name="매칭 작성자")
@@ -64,6 +67,10 @@ class Matching(models.Model):
     # 지역 코드를 지역명으로 변환
     def get_region(self):
         return parse_dict_from_code_pair(Matching.REGION)[self.region]
+
+    # 지역 상세 정보를 반환
+    def get_region_detail(self):
+        return self.region_detail if len(self.region_detail) < 10 else self.region_detail[:7] + "..."
 
     # 유형 코드를 유형으로 변환
     def get_tattoo_type(self):
