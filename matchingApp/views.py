@@ -30,6 +30,20 @@ def detail_matching_view(request, tattooist_id: int, matching_id: int):
     return render(request, "detail_matching.html", content)
 
 
+# matching 삭제
+# 해당 matching의 작성자인지 확인해야 함
+# matching/delete_matching/<tattooist_id: int>/<matching_id: int>
+def delete_matching(request, tattooist_id: int, matching_id: int):
+    matching = Matching.objects.get(pk=matching_id)
+
+    # 만약 로그인하지 않았거나, 작성자가 아닌 경우
+    if not request.user.is_authenticated or request.user.id != matching.author.id:
+        return redirect("customer_request_rejected")
+
+    matching.delete()
+
+    return redirect("matching_list")
+
 # customer가 tattooist만 접근 가능한 기능에 접근하는 경우
 def customer_request_rejected_view(request):
     return render(request, "customer_request_rejected.html")
