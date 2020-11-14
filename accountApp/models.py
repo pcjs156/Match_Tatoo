@@ -15,8 +15,7 @@ class Customer(AbstractUser):
     nickname = models.CharField(max_length=20, blank=False, null=False, verbose_name="닉네임")
 
     # 사용자 대표 이미지
-    user_image = models.ImageField(upload_to=date_upload_to, default="account/profile_image/user_default_image.png", blank=True, null=False, verbose_name="프로필 이미지")
-
+    
     # 소개글
     introduce = models.CharField(max_length=200, blank=True, null=False, default="등록된 소개글이 없습니다." , verbose_name="소개글")
     
