@@ -31,3 +31,11 @@ def date_upload_to(instance, filename):
     uuid_name = uuid4().hex
     extension = os.path.splitext(filename)[-1].lower()
     return '/'.join([dir_path, ymd_path, uuid_name + extension])
+
+# code, value 쌍을 요소로 갖는 tuple을 딕셔너리로 변환
+def parse_dict_from_code_pair(pairs: tuple):
+    return {pair[0]:pair[1] for pair in pairs}
+
+# key와 value가 바뀐 dictionary를 return
+def reversed_dict(d: dict):
+    return {value:key for key, value in d.items()}
