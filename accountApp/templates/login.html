@@ -11,6 +11,18 @@ LOGIN
 
 {% block content %}
 <section>
+    <form method="POST" >
+        {% csrf_token %}
+        <p>
+            <span>ID </span>
+            {{ form.username }}
+        </p>
+        <p>
+            <span>PW </span>
+            {{ form.password }}
+        </p>
 
+        <input type="submit" value="로그인">
+    </form>
 </section>
 {% endblock %}

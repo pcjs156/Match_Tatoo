@@ -7,10 +7,69 @@ CUSTOMER SIGNUP
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/signup_customer.css' %}">
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
 {% endblock %}
 
 {% block content %}
 <section>
+    {% if not validity_check.unknown %}
+        <!-- 유효하지 않은 입력을 받았을 때 -->
+        <p class="error_message">입력 정보를 다시 확인해주세요.</p>
+    {% endif %}
 
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+            <span>
+                ID
+                {% if not validity_check.username %}
+                <span class="error_message">이미 사용중인 ID입니다.</span>
+                {% endif %}
+            </span>
+            {{ form.username }}
+        </p>
+        <p>
+            <span>
+                PW
+                {% if not validity_check.password %}
+                <span class="error_message">패스워드가 일치하지 않습니다.</span>
+                {% endif %}
+            </span>
+
+            {{ form.password1 }}
+        </p>
+        <p>
+            <span>PW Check </span>
+            {{ form.password2 }}
+        </p>
+        <p>
+            <span>
+                Nickname
+                {% if not validity_check.nickname %}
+                <span class="error_message">이미 사용중인 닉네임입니다.</span>
+                {% endif %}
+            </span>
+            {{ form.nickname }}
+        </p>
+        <p>
+            <span>
+                Email
+                {% if not validity_check.email %}
+                <span class="error_message">이미 사용중인 이메일입니다.</span>
+                {% endif %}
+            </span>
+            {{ form.email }}
+        </p>
+        <p>
+            <div> Profile Image </div>
+            {{ form.user_image }}
+        </p>
+        <p>
+            <div>Introduce</div>
+            {{ form.introduce }}
+        </p>
+
+        <input type="submit" value="회원가입">
+    </form>
 </section>
 {% endblock %}
