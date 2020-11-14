@@ -21,6 +21,7 @@ class CustomerSignUpForm(UserCreationForm):
         user.is_customer = True
         user.save()
         return user
+        
 
 
 class TattooistSignUpForm(UserCreationForm):
