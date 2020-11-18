@@ -6,6 +6,11 @@ WELCOME!
 {% endblock %}
 
 {% block head %}
+
+<h5>
+    카카오로그인
+    <a href="{% provider_login_url 'kakao' method='oauth2' %}">카카오 의로그인</a>
+</h5>
 <link rel="stylesheet" href="{% static 'css/intro.css' %}">
 {% endblock %}
 

@@ -7,5 +7,4 @@ urlpatterns = [
     path('', views.intro_view, name="intro"),
     path('main/', views.main_view, name="main"),
     path('accounts/', include('allauth.urls')),
-
 ]

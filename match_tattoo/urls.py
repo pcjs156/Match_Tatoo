@@ -14,6 +14,8 @@ included_urls = [
     path('account/', include(accountApp.urls)),
     path('matching/', include(matchingApp.urls)),
     path('tattooist/', include(tattooistApp.urls)),
+    
+    path('accounts/', include('allauth.urls')),
 ]
 
 urlpatterns = [
