@@ -35,6 +35,9 @@ class Customer(AbstractUser):
     # 팔로워
     follwer = models.ManyToManyField("accountApp.Customer", blank=True, verbose_name="팔로워")
 
+    # 이메일 수신 동의
+    mailing_agreement = models.BooleanField(default=False, verbose_name="이메일 수신 동의")
+
     def __str__(self):
         if self.is_tattooist:
             typeMarker = "[T]"

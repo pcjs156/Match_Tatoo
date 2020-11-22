@@ -12,7 +12,7 @@ class UserLoginForm(AuthenticationForm):
 class CustomerSignUpForm(UserCreationForm):
     class Meta:
         model = Customer
-        fields = ['username', 'password1', 'password2', 'email',
+        fields = ['username', 'password1', 'password2', 'email', 'mailing_agreement',
                   'nickname', 'introduce', 'user_image']
 
     @transaction.atomic
@@ -26,7 +26,7 @@ class CustomerSignUpForm(UserCreationForm):
 class TattooistSignUpForm(UserCreationForm):
     class Meta:
         model = Customer
-        fields = ['username', 'password1', 'password2', 'email',
+        fields = ['username', 'password1', 'password2', 'email', 'mailing_agreement',
                   'nickname', 'introduce', 'user_image', 'contact', 'location']
 
     @transaction.atomic
