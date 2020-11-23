@@ -11,4 +11,5 @@ urlpatterns = [
     path("modify_portfolio/<int:tattooist_id>/<int:portfolio_id>", views.modify_portfolio_view, name="modify_portfolio"),
     path("modify_review_view/<int:tattooist_id>/<int:review_id>", views.modify_review_view,name="modify_review"),
     path("report", views.report_view, name="report"),
+    path("tattooist_profile/<int:tattooist_id>", views.tattooist_profile_view, name="tattooist_profile"),
 ]
