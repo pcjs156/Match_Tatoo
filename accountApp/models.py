@@ -47,3 +47,14 @@ class Customer(AbstractUser):
             typeMarker = "[U]"
         
         return typeMarker + f" ({self.id}) " + self.nickname
+
+    def get_follower_number(self):
+        follower_count = len(self.follower.all())
+
+        if follower_count >= 1000:
+            follower_count = "%.1f" % (follower_count/1000) + "K"
+
+        return follower_count
+
+    def get_short_introduce(self):
+        return self.introduce if len(self.introduce) < 20 else self.introduce[:17] + "..."

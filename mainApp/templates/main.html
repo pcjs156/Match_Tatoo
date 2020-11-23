@@ -15,7 +15,9 @@ MAIN
     <article>
         <p>최신 매칭</p>
         {% for matching in latest_matchings %}
-            <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
+            <div>
+                <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
+            </div>
         {% endfor %}
     </article>
 
@@ -23,7 +25,35 @@ MAIN
     <article>
         <p>인기 매칭</p>
         {% for matching in popular_matchings %}
-            <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
+            <div>
+                <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
+            </div>
+        {% endfor %}
+    </article>
+
+    {# 신규 타투이스트 #}
+    <article>
+        <p>신규 타투이스트</p>
+        {% for tattooist in new_tattooists %}
+            <a href="{% url 'tattooist_profile' tattooist.id %}">
+                <div style="width: 10rem; background-color: lightgray">
+                    <img style="width: 10rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+                    <div>{{ tattooist.nickname }} (♥ x {{ tattooist.get_follower_number }})</div>
+                </div>
+            </a>
+        {% endfor %}
+    </article>
+
+    {# 인기 타투이스트 #}
+    <article>
+        <p>인기 타투이스트</p>
+        {% for tattooist in popular_tattooists %}
+            <a href="{% url 'tattooist_profile' tattooist.id %}">
+                <div style="width: 10rem; background-color: lightgray">
+                    <img style="width: 10rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+                    <div>{{ tattooist.nickname }} (♥ x {{ tattooist.get_follower_number }})</div>
+                </div>
+            </a>
         {% endfor %}
     </article>
 </section>

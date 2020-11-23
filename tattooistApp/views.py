@@ -91,12 +91,7 @@ def tattooist_profile_view(request, tattooist_id):
         content["is_owner"] = is_owner
 
         # 팔로워 수
-        follower_count = len(tattooist.follwer.all())
-        # 팔로워가 1000명이 넘는 경우
-        # 팔로워 수를 1000으로 나눠 소숫점 아래 1자리까지 표시하고 K를 붙임
-        if follower_count >= 1000:
-            follower_count = "%.1f" % (follower_count/1000) + "K"
-
+        follower_count = tattooist.get_follower_number()
 
         # 리뷰를 남길 수 있는지 확인
         # 일단 로그인 한 사용자인지 확인하고,
