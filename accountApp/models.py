@@ -33,7 +33,7 @@ class Customer(AbstractUser):
     authenticated = models.BooleanField(default=False, verbose_name="인증 여부")
 
     # 팔로워
-    follwer = models.ManyToManyField("accountApp.Customer", blank=True, verbose_name="팔로워")
+    follower = models.ManyToManyField("accountApp.Customer", blank=True, verbose_name="팔로워")
 
     # 이메일 수신 동의
     mailing_agreement = models.BooleanField(default=False, verbose_name="이메일 수신 동의")
