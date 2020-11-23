@@ -50,16 +50,19 @@ class Matching(models.Model):
                        + "무릎 허벅지 종아리 발등 전체"
     PART = tuple((f"P{code}", name) for code, name in enumerate(__RAW_PART_STRING.split()))
     part = models.CharField(max_length=20, default=("P0", "기타"),
-                            blank=False, null=False, choices=PART ,verbose_name="부위")
+                            blank=False, null=False, choices=PART, verbose_name="부위")
 
     # 가격
     price = models.PositiveIntegerField(null=False, blank = False, verbose_name="가격")
     
     # 설명
-    description = models.TextField(null=False, blank=True, default="",verbose_name="공고글")
+    description = models.TextField(null=False, blank=True, default="", verbose_name="공고글")
 
     # 작성일
     pub_date = models.DateTimeField(auto_now_add=True, verbose_name="작성일")
+
+    # 해당 Matching을 찜 한 사람 목록
+    likers = models.ManyToManyField(Customer, blank=True, related_name='matching_likers', verbose_name="찜한 사용자")
 
     def __str__(self):
         return f"{self.id} | [{self.author} - {self.tattoo_model} - {self.pub_date}]"

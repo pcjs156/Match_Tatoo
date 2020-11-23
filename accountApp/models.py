@@ -46,4 +46,4 @@ class Customer(AbstractUser):
         else:
             typeMarker = "[U]"
         
-        return typeMarker + " " + self.nickname
+        return typeMarker + f" ({self.id}) " + self.nickname

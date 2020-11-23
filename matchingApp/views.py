@@ -24,8 +24,22 @@ def detail_matching_view(request, tattooist_id: int, matching_id: int):
     matching = Matching.objects.get(pk=matching_id)
     content["matching"] = matching
 
+    # 해당 matching의 작성자인지 표시
     is_author = request.user.is_authenticated and request.user.id == tattooist_id
     content["is_author"] = is_author
+
+    likers = [customer.nickname for customer in matching.likers.all()]
+    if len(likers) == 0:
+        like_message = "아직 찜 되지 않았습니다."
+    else:
+        like_message = f"{len(likers)}명의 유저가 해당 매칭을 찜 하셨습니다."
+    content["like_message"] = like_message
+
+    # 현재 유저가 해당 게시물을 찜했는지 확인
+    user_like = False
+    if request.user.is_authenticated:
+        user_like = matching.likers.filter(username=request.user.username).exists()
+    content["user_like"] = user_like
 
     return render(request, "detail_matching.html", content)
 
@@ -103,6 +117,24 @@ def matching_list_view(request):
     content["result_matching_list"] = result_matching_list.filter(is_matched=False)
     return render(request, "matching_list.html", content)
 
+# 매칭 찜 버튼이 눌린 경우 해당 유저가 로그인 되어 있는지 먼저 검사하고
+# 만약 로그인했을 경우, 찜을 누르지 않았다면 찜 표시, 찜을 눌렀다면 찜 해제
+@login_required(login_url="/account/login")
+def matching_like_pressed(request, matching_id):
+    # 대상 매칭
+    matching = Matching.objects.get(pk=matching_id)
+
+    # 만약 찜을 누르지 않았다면 찜 표시
+    if not matching.likers.filter(username=request.user.username).exists():
+        matching.likers.add(request.user)
+        matching.save()
+    # 만약 찜을 눌렀다면 찜 해제
+    else:
+        matching.likers.remove(request.user)
+        matching.save()
+
+    matching_author_id = matching.author.id
+    return redirect("detail_matching", matching_author_id, matching_id)
 
 # 매칭 작성 페이지
 # tattooist만 접근 가능해야 함

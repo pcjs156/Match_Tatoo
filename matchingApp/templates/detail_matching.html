@@ -24,6 +24,20 @@
         <p>{{ matching.description }}</p>
     </p>
 
+    <hr>
+
+    <p>{{ like_message }}</p>
+    <p>
+        <a href="{% url 'matching_like_pressed' matching.id %}">
+            {% if not user_like %}
+            {# 현재 접속한 유저가 좋아요를 누른 경우 #}
+            찜하기
+            {% else %}
+            찜 취소
+            {% endif %}
+        </a>
+    </p>
+
     <br>
     {% if is_author %}
         <p><a href={% url "modify_matching" tattooist_id=matching.author.id matching_id=matching.id %}>수정하기</a></p>
