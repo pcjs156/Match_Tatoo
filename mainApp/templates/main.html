@@ -11,6 +11,20 @@ MAIN
 
 {% block content %}
 <section>
+    {# 최신 매칭 #}
+    <article>
+        <p>최신 매칭</p>
+        {% for matching in latest_matchings %}
+            <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
+        {% endfor %}
+    </article>
 
+    {# 인기 매칭 #}
+    <article>
+        <p>인기 매칭</p>
+        {% for matching in popular_matchings %}
+            <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
+        {% endfor %}
+    </article>
 </section>
 {% endblock %}
