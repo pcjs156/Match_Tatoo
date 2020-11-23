@@ -17,6 +17,12 @@ def create_review(request, tattooist_id: int):
     pass
 
 
+# 리뷰 디테일 페이지
+# tattooist/detail_review/<matching_id: int>/<review_id: int>
+def detail_review_view(request, review_id: int):
+    return render(request, "detail_review.html")
+
+
 # 포트폴리오 디테일 페이지
 # tattooist/detail_portfolio/<tattooist_id: int>/<portfolio_id: int>
 def detail_portfolio_view(request, tattooist_id: int, portfolio_id: int):
