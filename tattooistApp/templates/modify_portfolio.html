@@ -11,6 +11,18 @@
 
 {% block content %}
 <section>
+    <form method="POST" action="{% url 'create_portfolio' %} " enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+            <p>사진</p>
+            <p>{{ form.portfolio_image }}</p>
+        </p>
 
+        <p>
+            <p>본문</p>
+            <p>{{ form.description }}</p>
+        </p>
+        <input type="submit" value="작성 완료">
+    </form>
 </section>
 {% endblock %}

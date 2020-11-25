@@ -11,6 +11,26 @@
 
 {% block content %}
 <section>
+    <div>
+        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+        {{tattooist.nickname}}
+    </div>
+    <hr>
+
+    <div>
+        <img style="width: 20rem; height: 20rem;" src="{{portfolio.portfolio_image.url}}">
+    </div>
+    <br>
+    <div>
+        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+        {{tattooist.nickname}}
+        {{portfolio.pub_date}}
+        <br>
+        {{portfolio.description}}
+    </div>
+    <hr>
+    <a href="{% url 'modify_portfolio' tattooist.id portfolio.id %}">TEST</a>
+    {#쪽지 보내기#}
 
 </section>
 {% endblock %}

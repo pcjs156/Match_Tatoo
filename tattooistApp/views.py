@@ -1,20 +1,39 @@
+from django.http import HttpResponse
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 
-
-# 포트폴리오 등록 페이지
-# tattooist/create_portfolio
 from django.utils.datastructures import MultiValueDictKeyError
 
 from accountApp.models import Customer
 from matchingApp.models import Matching
 from tattooistApp.models import Review, Portfolio
 
+from .forms import PortfolioForm, MessageForm
 
+# 포트폴리오 등록 페이지
+# tattooist만 접근 가능해야 함
+# tattooist/create_portfolio
 @login_required(login_url="/account/login")
 def create_portfolio_view(request):
-    return render(request, "create_portfolio.html")
+    # 로그인 하지 않았거나, 타투이스트가 아닌 사용자가 접근할 경우
+    if not request.user.is_authenticated or not request.user.is_tattooist:
+        return HttpResponse('유효하지 않은 접근입니다.')
+
+    if request.method == "POST":
+        form = PortfolioForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            portfolio = form.save(commit=False)
+            portfolio.author = request.user
+            portfolio.save()
+            return redirect("tattooist_profile", request.user.id)
+        else:
+            return HttpResponse('It is not valid')
+
+    else:
+        form = PortfolioForm()
+        return render(request, "create_portfolio.html", {'form':form})
 
 
 # 리뷰 작성 뷰: in tatooist_profile.html
@@ -34,7 +53,15 @@ def detail_review_view(request, review_id: int):
 # 포트폴리오 디테일 페이지
 # tattooist/detail_portfolio/<tattooist_id: int>/<portfolio_id: int>
 def detail_portfolio_view(request, tattooist_id: int, portfolio_id: int):
-    return render(request, "detail_portfolio.html")
+    content = dict()
+
+    tattooist = Customer.objects.get(id=tattooist_id)
+    content["tattooist"] = tattooist
+
+    portfolio = Portfolio.objects.get(pk=portfolio_id)
+    content["portfolio"] = portfolio
+
+    return render(request, "detail_portfolio.html", content)
 
 
 # 타투이스트와 메시지를 주고 받는 페이지
@@ -49,7 +76,31 @@ def message_view(request, tattooist_id: int):
 # tattooist/modify_portfolio/<tattooist_id: int>/<portfolio_id: int>
 @login_required(login_url="/account/login")
 def modify_portfolio_view(request, tattooist_id: int, portfolio_id: int):
-    return render(request, "modify_portfolio.html")
+    portfolio = Portfolio.objects.get(pk=portfolio_id)
+
+    # 만약 로그인하지 않았거나, 작성자가 아닌 경우
+    if not request.user.is_authenticated or request.user.id != portfolio.author.id:
+        return HttpResponse('유효하지 않은 접근입니다.')
+
+    if request.method == "POST":
+        form = PortfolioForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            updated_portfolio = form.save(commit=False)
+
+            portfolio.author = updated_portfolio.author
+            portfolio.portfolio_image = updated_portfolio.portfolio_image
+            portfolio.pub_date = datetime.now()
+            portfolio.description = updated_portfolio.description
+
+            portfolio.save()
+            return redirect("detail_portfolio", tattooist_id, portfolio_id)
+        else:
+            return render(request, "modify_portfolio.html", {'form':form})
+
+    else:
+        form = PortfolioForm(instance=portfolio)
+        return render(request, "modify_portfolio.html", {'form':form})
 
 
 # 리뷰를 수정하는 페이지
