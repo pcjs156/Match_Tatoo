@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from accountApp.models import Customer
 from matchingApp.models import Matching
+from django.db.models import Q
 
 # 인트로 페이지
 # /
@@ -40,3 +41,19 @@ def main_view(request):
     content["popular_tattooists"] = popular_tattooists
 
     return render(request, "main.html", content)
+
+# 검색결과 페이지
+# /search_result
+def search_result_view(request):
+    content = dict()
+    
+    w = request.GET.get('w') or ""
+    content["w"] = w
+
+    search_result = Matching.objects.filter(
+        Q(title__icontains=w) | Q(tattoo_type__icontains=w) |
+        Q(description__icontains=w) | Q(part__icontains=w)
+    ).distinct()  # 중복사항 제거
+    content["search_result"] = search_result
+
+    return render(request, "search_result.html", content)

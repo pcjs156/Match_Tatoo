@@ -56,5 +56,12 @@ MAIN
             </a>
         {% endfor %}
     </article>
+
+    <div>
+        <form method="GET" action="/search_result">
+            <input id="searchbar" type="text" placeholder="Search" name="w" style="width: 47em;">
+            <button type="submit" value="검색">Search</button>
+        </form>
+    </div>
 </section>
 {% endblock %}
