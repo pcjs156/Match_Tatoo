@@ -4,6 +4,9 @@ from accountApp.models import Customer
 from matchingApp.models import Matching
 from django.db.models import Q
 
+from django.core.paginator import Paginator
+import math
+
 # 인트로 페이지
 # /
 def intro_view(request):
@@ -55,5 +58,22 @@ def search_result_view(request):
         Q(description__icontains=w) | Q(part__icontains=w)
     ).distinct()  # 중복사항 제거
     content["search_result"] = search_result
+
+    paginator = Paginator(search_result, 2)
+    page = request.GET.get('page')
+    post_counts = paginator.get_page(page)
+    content["post_counts"] = post_counts
+
+    if w == "":   # w가 작성되지 않았을 경우, search_result 비우기
+        del(content["search_result"])
+    if page == "" or page == None:
+        page = 1
+    
+    page_range = 5 # 보여질 페이지 범위 지정
+    current_block = math.ceil(int(page)/page_range)
+    start_block = (current_block-1) * page_range
+    end_block = start_block + page_range
+    p_range = paginator.page_range[start_block:end_block]
+    content["p_range"] = p_range
 
     return render(request, "search_result.html", content)

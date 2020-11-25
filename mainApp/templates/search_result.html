@@ -22,5 +22,41 @@ WELCOME!
     <p>'{{w}}'으로 검색한 결과물입니다.</p>
 
     <hr>
+
+    {% if search_result %}
+        {% for post in post_counts %}
+            {# 검색 결과 보여주기 #}
+            {{post}}
+        {%endfor%}
+
+        <br>
+
+        {% if post_counts.hevious %}
+                <a href="?q={{q}}&page={{post_counts.previous_page_number}}">Previous</a>
+            {% else%}
+                <a tabindex="-1">Previous</a>
+            {% endif %}
+    
+            {% for i in p_range %}
+            {% if i == post_counts.number %}
+                <a href="?q={{q}}&page={{i}}">{{i}}</a>
+            {% else %}
+                <a href="?q={{q}}&page={{i}}">{{i}}</a>
+            {% endif %}
+            {% endfor %}
+    
+            {% if post_counts.has_next %}
+                <a href="?q={{q}}&page={{post_counts.next_page_number}}">Next</a>
+            {% else %}
+                <a tabindex="-1">Next</a>
+            {% endif %}
+
+        {% elif q %}
+            "{{ q }}"는 검색 결과가 없습니다!
+
+        {% else %}
+            검색어를 입력하세요!
+
+        {% endif %}
 </section>
 {% endblock %}
