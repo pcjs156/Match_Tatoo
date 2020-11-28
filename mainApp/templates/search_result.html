@@ -26,7 +26,7 @@ WELCOME!
     {% if search_result %}
         {% for post in post_counts %}
             {# 검색 결과 보여주기 #}
-            {{post}}
+            <a href="{% url 'detail_matching' post.author.id post.id %}"><p>{{ post }}</p></a>
         {%endfor%}
 
         <br>
