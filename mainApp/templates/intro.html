@@ -1,16 +1,47 @@
-{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-WELCOME!
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block head %}
-<link rel="stylesheet" href="{% static 'css/intro.css' %}">
-{% endblock %}
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e6fc3f0519.js" crossorigin="anonymous"></script>
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
-{% block content %}
-<section>
-    <a href="{% url 'matching_list' %}?region=부산광역시&type=기타&part=기타&order-by=price">TEST</a>
-</section>
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/intro.css' %}">
+
+    <title>MATCH-TATTO: WELCOME!</title>
+</head>
+
+<body>
+    <section>
+        <div>
+            <img alt="로고">
+        </div>
+
+        <div>
+            <div>타투 매칭 플랫폼</div>
+            <div>
+                매칭타투 - 자신에게 맞는 타투이스트를 찾고
+                합리적인 가격으로 안전하게 시술받으세요!
+            </div>
+            <a href="{% url 'main' %}">홈으로 가기</a>
+        </div>
+
+        <div>
+            <div>우측 하단 영역</div>
+            <a href="{% url 'login' %}"><div>로그인</div></a>
+            <a href="{% url 'select_user_type' %}"><div>회원가입</div></a>
+        </div>
+    </section>
+
+    <footer>
+        <div>백엔드ㅣ박유빈 평주영 한경훈</div>
+        <div>프론트엔드&디자인ㅣ강영진 윤소영</div>
+        <div>국민대학교 멋쟁이 사자처럼 8기 프로젝트</div>
+    </footer>
+</body>
+</html>
