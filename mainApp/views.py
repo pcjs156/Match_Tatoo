@@ -42,6 +42,11 @@ def main_view(request):
     # 인기 타투이스트 목록
     popular_tattooists = sorted(list(tattooists), key=lambda tattooist: len(tattooist.follower.all()), reverse=True)[:TATTOOIST_NUMBER]
     content["popular_tattooists"] = popular_tattooists
+    
+    # 성사되지 않은 매칭의 갯수
+    total_unmatched_matching_cnt = len(Matching.objects.all().filter(is_matched=False))
+    print(total_unmatched_matching_cnt)
+    content["total_unmatched_matching_cnt"] = total_unmatched_matching_cnt
 
     return render(request, "main.html", content)
 

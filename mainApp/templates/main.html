@@ -11,9 +11,16 @@ MAIN
 
 {% block content %}
 <section>
+    <article>
+        <img alt="대표 이미지 1">
+        <img alt="대표 이미지 2">
+        <img alt="대표 이미지 3">
+    </article>
+
     {# 최신 매칭 #}
     <article>
-        <p>최신 매칭</p>
+        <p>최신 매칭 타투</p>
+        <p>매칭을 기다리는 <u>{{ total_unmatched_matching_cnt }}개</u>의 타투가 있어요!</p>
         {% for matching in latest_matchings %}
             <div>
                 <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
@@ -23,24 +30,11 @@ MAIN
 
     {# 인기 매칭 #}
     <article>
-        <p>인기 매칭</p>
+        <p>인기 매칭 타투</p>
         {% for matching in popular_matchings %}
             <div>
                 <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
             </div>
-        {% endfor %}
-    </article>
-
-    {# 신규 타투이스트 #}
-    <article>
-        <p>신규 타투이스트</p>
-        {% for tattooist in new_tattooists %}
-            <a href="{% url 'tattooist_profile' tattooist.id %}">
-                <div style="width: 10rem; background-color: lightgray">
-                    <img style="width: 10rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
-                    <div>{{ tattooist.nickname }} (♥ x {{ tattooist.get_follower_number }})</div>
-                </div>
-            </a>
         {% endfor %}
     </article>
 
@@ -52,16 +46,33 @@ MAIN
                 <div style="width: 10rem; background-color: lightgray">
                     <img style="width: 10rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
                     <div>{{ tattooist.nickname }} (♥ x {{ tattooist.get_follower_number }})</div>
+                    <div>{{ tattooist.get_short_introduce }}</div>
                 </div>
             </a>
         {% endfor %}
     </article>
 
-    <div>
+    {# 신규 타투이스트 #}
+    <article>
+        <p>신규 타투이스트</p>
+        {% for tattooist in new_tattooists %}
+            <a href="{% url 'tattooist_profile' tattooist.id %}">
+                <div style="width: 10rem; background-color: lightgray">
+                    <img style="width: 10rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+                    <div>{{ tattooist.nickname }}</div>
+                    <div>{{ tattooist.get_short_introduce }}</div>
+                </div>
+            </a>
+        {% endfor %}
+    </article>
+
+    <article>
         <form method="GET" action="/search_result">
-            <input id="searchbar" type="text" placeholder="Search" name="w" style="width: 47em;">
+            <input id="searchbar" type="text" placeholder="타투 검색하기.." name="w" style="width: 47em;">
             <button type="submit" value="검색">Search</button>
         </form>
-    </div>
+
+        <a href="#"><div>불편 개선 신고하기</div></a>
+    </article>
 </section>
 {% endblock %}
