@@ -11,6 +11,11 @@
 
 {% block content %}
 <section>
+    <p>
+        <p>매칭 이미지</p>
+        <img src="{{ matching.image.url }}" alt="매칭 이미지">
+    </p>
+
     <p>작성자: {{ tattooist.nickname }}</p>
     <p>작성일: {{ matching.pub_date }}</p>
 

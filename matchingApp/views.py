@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.paginator import Paginator
 from django.utils.datastructures import MultiValueDictKeyError
 
 from django.shortcuts import render, redirect
@@ -69,52 +70,66 @@ def matching_list_view(request):
     content = dict()
     content["is_tattooist"] = (request.user.is_authenticated) and (request.user.is_tattooist)
 
+    region_now = "전체"
+    tattoo_type_now = "전체"
+    part_now = "전체"
+    orderby_now = "최신순"
+
+    # GET으로 조건을 받아올 때 정해지지 않은 입력값이 들어온 경우 경고 메시지를 띄우기 위한 변수
+    unmatched_condition = False
+
     try:
         region = request.GET["region"]     # 지역
-        tattoo_type = request.GET["type"]  # 타투 유형
+        tattoo_type = request.GET["tattoo_type"]  # 타투 유형
         part = request.GET["part"]         # 타투 부위
-        orderby = request.GET["order-by"]  # 정렬 방법(price/description)
+        orderby = request.GET["order-by"]  # 정렬 방법(price/pub_date)
 
-        # GET으로 받아온 매칭 검색 조건이 유효한지 검사
-        keyword_validation = searching_keyword_validation(region=region,
-                                                          tattoo_type=tattoo_type,
-                                                          part=part,
-                                                          orderby=orderby)
-        # 검색 조건의 유효성을 확인해 유효한 조건으로만 필터링
-        if not keyword_validation["region"]:
-            # 맨 처음 조건(지역)이 유효하지 않다면 필터링을 거치지 않으므로 전부 가져옴
-            result_matching_list = Matching.objects.all()
+        if region in [pair[1] for pair in Matching.REGION] and region != "전체":
+            result_matching_list = Matching.objects.filter(region=region, is_matched=False)
+            region_now = region
         else:
-            code_value_dict = parse_dict_from_code_pair(Matching.REGION)
-            region_code = reversed_dict(code_value_dict)[region]
-            result_matching_list = Matching.objects.filter(region=region_code)
+            result_matching_list = Matching.objects.filter(is_matched=False)
+            unmatched_condition = True
 
-        if keyword_validation["tattoo_type"]:
-            code_value_dict = parse_dict_from_code_pair(Matching.TYPE)
-            tattoo_type_code = reversed_dict(code_value_dict)[tattoo_type]
-            result_matching_list = result_matching_list.filter(tattoo_type=tattoo_type_code)
-
-        if keyword_validation["part"]:
-            code_value_dict = parse_dict_from_code_pair(Matching.PART)
-            part_code = reversed_dict(code_value_dict)[part]
-            result_matching_list = result_matching_list.filter(part=part_code)
-
-        if keyword_validation["order-by"]:
-            if orderby == "price":
-                result_matching_list = result_matching_list.order_by("price")
-            elif orderby == "pub-date":
-                result_matching_list = result_matching_list.order_by("-pub_date")
-        # 정렬 순서가 유효하지 않은 경우 최신순으로 정렬
+        if tattoo_type in [pair[1] for pair in Matching.TYPE] and tattoo_type != "전체":
+            result_matching_list = result_matching_list.filter(tattoo_type=tattoo_type)
+            tattoo_type_now = tattoo_type
         else:
-            result_matching_list = result_matching_list.order_by('-pub_date')
+            unmatched_condition = True
 
+        if part in [pair[1] for pair in Matching.PART] and part != "전체":
+            result_matching_list = result_matching_list.filter(part=part)
+            part_now = part
+        else:
+            unmatched_condition = True
 
-    # 검색 조건 중 하나라도 입력되지 않은 경우 매칭 전체를 최신순으로 보여줌
+        if orderby in ("pub_date", "price"):
+            orderby = "price" if orderby=="price" else "-pub_date"
+            result_matching_list = result_matching_list.order_by(orderby)
+            orderby_now = "가격순" if orderby=="price" else "최신순"
+        else:
+            result_matching_list = result_matching_list.order_by("-pub_date")
+            unmatched_condition = True
+
+    # 검색 조건 중 하나라도 입력되지 않은 경우 성사되지 않은 매칭 전체를 최신순으로 보여줌
     except MultiValueDictKeyError:
-        result_matching_list = Matching.objects.order_by("-pub_date")
+        result_matching_list = Matching.objects.filter(is_matched=False).order_by("-pub_date")
 
+    # 페이지네이션
+    paginator = Paginator(result_matching_list, 9)
+    try:
+        page = request.GET.get('page')
+    except MultiValueDictKeyError:
+        page = 1
+    result_matching_list = paginator.get_page(page)
 
-    content["result_matching_list"] = result_matching_list.filter(is_matched=False)
+    content["unmatched_condition"] = unmatched_condition
+    content["region_now"] = region_now
+    content["tattoo_type_now"] = tattoo_type_now
+    content["part_now"] = part_now
+    content["orderby_now"] = orderby_now
+
+    content["result_matching_list"] = result_matching_list
     return render(request, "matching_list.html", content)
 
 # 매칭 찜 버튼이 눌린 경우 해당 유저가 로그인 되어 있는지 먼저 검사하고
@@ -149,13 +164,12 @@ def create_matching_view(request):
     content["error"] = False
 
     if request.method == "POST":
-        form = MatchingForm(request.POST)
+        form = MatchingForm(request.POST, request.FILES)
 
         if form.is_valid() and request.POST["region"] != "R0":
             matching: Matching = form.save(commit=False)
             matching.author = request.user
             matching.save()
-            print(matching.region)
             return redirect("matching_list")
         else:
             content["error"] = True
@@ -183,11 +197,10 @@ def modify_matching_view(request, tattooist_id: int, matching_id: int):
     content["error"] = False
 
     if request.method == "POST":
-        form = MatchingForm(request.POST)
+        form = MatchingForm(request.POST, request.FILES)
 
         if form.is_valid() and request.POST["region"] != "R0":
             updated_matching = form.save(commit=False)
-
             matching.title = updated_matching.title
             matching.region = updated_matching.region
             matching.region_detail = updated_matching.region_detail
@@ -196,6 +209,14 @@ def modify_matching_view(request, tattooist_id: int, matching_id: int):
             matching.price = updated_matching.price
             matching.description = updated_matching.description
             matching.pub_date = datetime.now()
+
+            try:
+                updated_image = request.FILES["image"]
+            # 이미지가 변경되지 않을 경우 기존 이미지를 그대로 사용
+            except MultiValueDictKeyError:
+                pass
+            else:
+                matching.image = updated_image
 
             matching.save()
 
@@ -209,4 +230,5 @@ def modify_matching_view(request, tattooist_id: int, matching_id: int):
     else:
         form = MatchingForm(instance=matching)
         content["form"] = form
+        content["image_url"] = matching.image.url
         return render(request, "modify_matching.html", content)
