@@ -149,13 +149,12 @@ def create_matching_view(request):
     content["error"] = False
 
     if request.method == "POST":
-        form = MatchingForm(request.POST)
+        form = MatchingForm(request.POST, request.FILES)
 
         if form.is_valid() and request.POST["region"] != "R0":
             matching: Matching = form.save(commit=False)
             matching.author = request.user
             matching.save()
-            print(matching.region)
             return redirect("matching_list")
         else:
             content["error"] = True

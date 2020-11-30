@@ -19,11 +19,16 @@ NEW MATCHING POST
     </ol>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <p>
             <p>제목</p>
             <p>{{ form.title }}</p>
+        </p>
+
+        <p>
+            <p>매칭 이미지</p>
+            <p>{{ form.image }}</p>
         </p>
 
         <p>
