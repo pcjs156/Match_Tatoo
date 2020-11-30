@@ -1,7 +1,7 @@
 from django.db import models
 from accountApp.models import Customer
 
-from tools import parse_dict_from_code_pair
+from tools import parse_dict_from_code_pair, date_upload_to
 
 # 매칭 게시글
 class Matching(models.Model): 
@@ -10,6 +10,10 @@ class Matching(models.Model):
 
     # 매칭 제목
     title = models.CharField(max_length=50, null=False, blank=False, verbose_name="매칭 제목")
+
+    # 매칭 이미지
+    image = models.ImageField(upload_to=date_upload_to, default="matching/matching_image/default_matching_image.png",
+                              blank=True, null=False, verbose_name="매칭 이미지")
 
     # 매칭 작성자
     author = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=False,
