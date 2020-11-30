@@ -19,11 +19,22 @@ MATCHING POST MODIFY
     </ol>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <p>
             <p>제목</p>
             <p>{{ form.title }}</p>
+        </p>
+
+        <p>
+            <p>
+                <p>현재 이미지</p>
+                <img src="{{ image_url }}">
+                <p>
+                    <p>변경 이미지</p>
+                    <input type="file" name="image" accept="image/*" id="id_image">
+                </p>
+            </p>
         </p>
 
         <p>

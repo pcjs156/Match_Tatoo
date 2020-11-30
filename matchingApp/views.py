@@ -182,11 +182,10 @@ def modify_matching_view(request, tattooist_id: int, matching_id: int):
     content["error"] = False
 
     if request.method == "POST":
-        form = MatchingForm(request.POST)
+        form = MatchingForm(request.POST, request.FILES)
 
         if form.is_valid() and request.POST["region"] != "R0":
             updated_matching = form.save(commit=False)
-
             matching.title = updated_matching.title
             matching.region = updated_matching.region
             matching.region_detail = updated_matching.region_detail
@@ -195,6 +194,14 @@ def modify_matching_view(request, tattooist_id: int, matching_id: int):
             matching.price = updated_matching.price
             matching.description = updated_matching.description
             matching.pub_date = datetime.now()
+
+            try:
+                updated_image = request.FILES["image"]
+            # 이미지가 변경되지 않을 경우 기존 이미지를 그대로 사용
+            except MultiValueDictKeyError:
+                pass
+            else:
+                matching.image = updated_image
 
             matching.save()
 
@@ -208,4 +215,5 @@ def modify_matching_view(request, tattooist_id: int, matching_id: int):
     else:
         form = MatchingForm(instance=matching)
         content["form"] = form
+        content["image_url"] = matching.image.url
         return render(request, "modify_matching.html", content)
