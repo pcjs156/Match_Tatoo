@@ -1,15 +1,20 @@
+from datetime import datetime
+
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views import View
+
+from accountApp.AccountErrorHandler import AlreadyAuthenticatedCustomer
+from accountApp.models import Customer
 from match_tattoo.settings import DEBUG
 
 from accountApp.forms import UserLoginForm, CustomerSignUpForm
 from accountApp.tools import UserSignupChecker, TattooistSignUpForm
 
 from tools import json_to_dict
+from .tools import kakao_encrypt, kakao_decrypt
 
 
 # 로그인이 이미 되어 있는데 로그인을 시도하는 경우 이동되는 페이지
@@ -21,11 +26,38 @@ def already_logged_in_view(request):
     else:
         return redirect("main")
 
+# 카카오 인증을 완료했을 때 이동하는 페이지
+def auth_complete_view(request):
+    return render(request, "auth_complete.html")
 
-# 카카오 로그인 인증 class view
+# 카카오 로그인 페이지로 이동시키는 뷰
+# 단, 존재하지 않는 아이디이거나 이미 인증을 거친 경우 main페이지로 리다이렉트 시킴
 # DEBUG 모드일 때와 아닐 때의 도메인이 다르므로 참고할 것
-class KakaoAuthView(View):
-    def get(self, request):
+def kakao_auth_view(request, username: str):
+    # 입력된 아이디를 가지고 있는 유저를 찾음
+    try:
+        user = Customer.objects.get(username=username)
+        # 이미 인증을 거친 유저인 경우
+        if user.authenticated:
+            raise AlreadyAuthenticatedCustomer
+
+    # 만약 해당 아이디를 가진 유저가 존재하지 않는 경우
+    except Customer.DoesNotExist:
+        print("Invalid access ocurred.")
+        print("User does not exist.")
+        print(f"username: {username}")
+        print(f"datetime: {datetime.now()}")
+        return redirect("main")
+    # 이미 인증을 거친 유저인 경우
+    except AlreadyAuthenticatedCustomer:
+        print("Invalid access ocurred.")
+        print("User has been authenticated.")
+        print(f"username: {username}")
+        print(f"datetime: {datetime.now()}")
+        return redirect("main")
+
+    # 위의 조건에 해당하지 않는 경우, 카카오 로그인 페이지로 이동시킴
+    if request.method == "GET":
         api_info = json_to_dict("kakao_rest_api_datas.json", "rest_api_key", "redirect_uri_debug", "redirect_uri")
         client_id = api_info["rest_api_key"]
 
@@ -39,8 +71,10 @@ class KakaoAuthView(View):
         )
 
 
-class KakaoCallBackView(View):
-    def get(self, request):
+# kakao_auth로부터 인증 토큰을 받아 실질적인 정보(카카오 id 고유번호)를 받아옴
+# 뭔가 문제가 생기면 그냥 None을 return ㅎㅎ
+def kakao_callback_view(request):
+    if request.method == "GET":
         try:
             code = request.GET.get("code")
 
@@ -70,24 +104,15 @@ class KakaoCallBackView(View):
             )
 
             profile_json = profile_request.json()
-            kakao_account = profile_json.get("kakao_account")
-            email = kakao_account.get("email", None)
             kakao_id = profile_json.get("id")
+            encrypted_kakao_id = kakao_encrypt(str(kakao_id))
 
-            print(profile_json, kakao_account, email, kakao_id)
-
-            return JsonResponse(
-                {"profile_json":profile_json,
-                "kakao_account": kakao_account,
-                "email": email,
-                "kakao_id": kakao_id},
-                status=200
-            )
+            return redirect("login_for_kakao_auth", str(encrypted_kakao_id)[2:-1])
 
         except KeyError:
-            return JsonResponse({"message": "INVALID_TOKEN"}, status=400)
+            return None
         except access_token.DoesNotExist:
-            return JsonResponse({"message": "INVALID_TOKEN"}, status=400)
+            return None
 
 
 # 로그인 페이지
@@ -121,6 +146,51 @@ def login_view(request):
     else:
         form = UserLoginForm()
         return render(request, 'login.html', {'form': form, 'login_failed':False})
+
+
+# 카카오 ID를 정상적으로 받아왔을 때 매치 타투 로그인을 다시 요구하는 페이지
+def login_for_kakao_auth_view(request, kakao_id):
+    content = dict()
+    # 해당 아이디로 이미 서비스 인증을 한 적이 있는가?
+    already_used_kakao_id = False
+
+    # 만약 방금 전의 카카오톡 로그인으로 입력된 계정이 인증에 사용된 계정이라면 비정상 접근
+    if kakao_id in [customer.kakao_code for customer in Customer.objects.all()]:
+        # 이미 인증한 사용자의 아이디를 가려서 보여줌
+        authenticated_user = Customer.objects.get(kakao_code=kakao_id)
+        authenticated_user_id = authenticated_user.username[:len(authenticated_user.username)//2]
+        authenticated_user_id = authenticated_user_id + "..."
+        print(authenticated_user_id)
+
+        content["authenticated_id"] = authenticated_user_id
+        already_used_kakao_id = True
+
+    # 만약에 로그인한 사용자인 경우 비정상 접근임
+    elif request.user.is_authenticated:
+        return redirect("already_logged_in")
+
+    else:
+        if request.method == "POST":
+            form = UserLoginForm(request=request, data=request.POST)
+            if form.is_valid():
+                username = form.cleaned_data.get("username")
+                password = form.cleaned_data.get("password")
+                user = authenticate(request=request, username=username, password=password)
+
+                # 카카오 아이디 갱신 / 인증 완료 체크
+                user.kakao_code = kakao_id
+                user.authenticated = True
+                user.save()
+
+                login(request, user)
+
+                return redirect("auth_complete")
+            else:
+                return redirect("login_for_kakao_auth", kakao_id, content)
+
+    content["form"] = UserLoginForm()
+    content["already_used_kakao_id"] = already_used_kakao_id
+    return render(request, "login_for_kakao_auth.html", content)
 
 
 def __logout(request):
@@ -171,8 +241,7 @@ def signup_customer_view(request):
         else:
             user = form.save()
             user.save()
-            login(request, user)
-            return redirect("main")
+            return redirect("kakao_auth", user.username)
 
     else:
         form = CustomerSignUpForm()
@@ -206,8 +275,7 @@ def signup_tattooist_view(request):
         else:
             user = form.save()
             user.save()
-            login(request, user)
-            return redirect("main")
+            return redirect("kakao_auth", user.username)
 
     else:
         form = TattooistSignUpForm()
