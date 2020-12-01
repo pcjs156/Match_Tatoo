@@ -29,16 +29,17 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-            user = authenticate(request=request, username=username, password=password)
-
+            user = form.save()
+            login(request,user,
+                backend='allauth.account.auth_backends.AuthenticationBackend')
             if user is not None:
-                login(request, user)
-                backend="django.contrib.auth.backends.ModelBackend"
+                login(request, user,
+                backend='allauth.account.auth_backends.AuthenticationBackend')
                 return redirect("main")
 
     else:
         form = UserLoginForm()
-        backend="django.contrib.auth.backends.ModelBackend"
+        backend='allauth.account.auth_backends.AuthenticationBackend'
         return render(request, 'login.html', {'form': form})
 
 
@@ -77,6 +78,9 @@ def social_signup_view(request):
 # account/signup_customer
 def signup_customer_view(request):
     # 로그인한 사용자를 차단
+                    
+    backend='allauth.account.auth_backends.AuthenticationBackend'
+
     if request.user.is_authenticated:
         return redirect("already_logged_in")
 
@@ -97,7 +101,8 @@ def signup_customer_view(request):
         else:
             user = form.save()
             user.save()
-            login(request, user)
+            login(request, user,
+    backend='allauth.account.auth_backends.AuthenticationBackend')
             return redirect("main")
 
     else:
@@ -132,7 +137,8 @@ def signup_tattooist_view(request):
         else:
             user = form.save()
             user.save()
-            login(request, user)
+            login(request, user,
+            backend='allauth.account.auth_backends.AuthenticationBackend')
             return redirect("main")
 
     else:
