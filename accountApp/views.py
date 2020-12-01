@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from accountApp.forms import UserLoginForm, CustomerSignUpForm
 from accountApp.tools import UserSignupChecker, TattooistSignUpForm
-
+from allauth.socialaccount.views import SignupView
 
 # 로그인이 이미 되어 있는데 로그인을 시도하는 경우 이동되는 페이지
 # 이미 로그인 되어 있는지 확인해야 함
@@ -33,10 +33,12 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
+                backend="django.contrib.auth.backends.ModelBackend"
                 return redirect("main")
 
     else:
         form = UserLoginForm()
+        backend="django.contrib.auth.backends.ModelBackend"
         return render(request, 'login.html', {'form': form})
 
 
@@ -61,6 +63,13 @@ def select_user_type_view(request):
         return redirect("already_logged_in")
 
     return render(request, "select_user_type.html")
+
+def social_signup_view(request):
+    # 로그인한 사용자를 차단
+    if request.user.is_authenticated:
+        return redirect("already_logged_in")
+
+    return render(request, "accounts/social/signup.html")
 
 
 # 피시술자(customer) 회원가입 페이지
@@ -131,3 +140,23 @@ def signup_tattooist_view(request):
         content["form"] = form
         content["validity_check"] = UserSignupChecker(form, default=True)
         return render(request, 'signup_tattooist.html', content)
+
+
+
+
+class AccountSignupView(SignupView):
+    # Signup View extended
+
+    # change template's name and path
+    template_name = "templates/socialaccount/signup.html"
+    
+    def social_signup_view(request):
+        # 로그인한 사용자를 차단
+        if request.user.is_authenticated:
+            return redirect("already_logged_in")
+
+        return render(request, "socialaccount/signup.html")
+
+
+
+account_signup_view = AccountSignupView.as_view()

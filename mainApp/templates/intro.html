@@ -6,12 +6,15 @@ WELCOME!
 {% endblock %}
 
 {% block head %}
+    {% load socialaccount %}
 
-<h5>
-    카카오로그인
-    <a href="{% provider_login_url 'kakao' method='oauth2' %}">카카오 의로그인</a>
-</h5>
-<link rel="stylesheet" href="{% static 'css/intro.css' %}">
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="button" type="submit" value="Login">
+</form>
+
+<a href="{% provider_login_url 'naver' %}">네이버로 로그인 하기</a>
 {% endblock %}
 
 {% block content %}

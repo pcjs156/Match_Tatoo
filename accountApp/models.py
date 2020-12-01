@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
 from tools import date_upload_to
+
+
 
 
 class Customer(AbstractUser): 
