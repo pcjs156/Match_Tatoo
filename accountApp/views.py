@@ -1,9 +1,15 @@
+import requests
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views import View
+from match_tattoo.settings import DEBUG
 
 from accountApp.forms import UserLoginForm, CustomerSignUpForm
 from accountApp.tools import UserSignupChecker, TattooistSignUpForm
+
+from tools import json_to_dict
 
 
 # 로그인이 이미 되어 있는데 로그인을 시도하는 경우 이동되는 페이지
@@ -14,6 +20,74 @@ def already_logged_in_view(request):
         return render(request, "already_logged_in.html")
     else:
         return redirect("main")
+
+
+# 카카오 로그인 인증 class view
+# DEBUG 모드일 때와 아닐 때의 도메인이 다르므로 참고할 것
+class KakaoAuthView(View):
+    def get(self, request):
+        api_info = json_to_dict("kakao_rest_api_datas.json", "rest_api_key", "redirect_uri_debug", "redirect_uri")
+        client_id = api_info["rest_api_key"]
+
+        if DEBUG:
+            redirect_uri = api_info["redirect_uri_debug"]
+        else:
+            redirect_uri = api_info["redirect_uri"]
+
+        return redirect(
+            f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code",
+        )
+
+
+class KakaoCallBackView(View):
+    def get(self, request):
+        try:
+            code = request.GET.get("code")
+
+            api_info = json_to_dict("kakao_rest_api_datas.json", "rest_api_key", "redirect_uri_debug", "redirect_uri")
+            client_id = api_info["rest_api_key"]
+
+            if DEBUG:
+                redirect_uri = api_info["redirect_uri_debug"]
+            else:
+                redirect_uri = api_info["redirect_uri"]
+
+            token_request = requests.get(
+                f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}"
+            )
+
+            token_json = token_request.json()
+
+            error = token_json.get("error", None)
+
+            if error is not None:
+                return JsonResponse({"message": "INVALID_TOKEN"}, status=400)
+
+            access_token = token_json.get("access_token")
+
+            profile_request = requests.get(
+                "https://kapi.kakao.com/v2/user/me", headers = {"Authorization": f"Bearer {access_token}"}
+            )
+
+            profile_json = profile_request.json()
+            kakao_account = profile_json.get("kakao_account")
+            email = kakao_account.get("email", None)
+            kakao_id = profile_json.get("id")
+
+            print(profile_json, kakao_account, email, kakao_id)
+
+            return JsonResponse(
+                {"profile_json":profile_json,
+                "kakao_account": kakao_account,
+                "email": email,
+                "kakao_id": kakao_id},
+                status=200
+            )
+
+        except KeyError:
+            return JsonResponse({"message": "INVALID_TOKEN"}, status=400)
+        except access_token.DoesNotExist:
+            return JsonResponse({"message": "INVALID_TOKEN"}, status=400)
 
 
 # 로그인 페이지

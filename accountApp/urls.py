@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     path("already_logged_in", views.already_logged_in_view, name="already_logged_in"),
+    path("kakao_auth", views.KakaoAuthView.as_view(), name="kakao_auth"),
+    path("kakao_callback", views.KakaoCallBackView.as_view(), name="kakao_callback"),
     path("login", views.login_view, name="login"),
     path("logout", views.__logout, name="logout"),
     path("mypage", views.mypage_view, name="mypage"),
