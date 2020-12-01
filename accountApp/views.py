@@ -105,13 +105,22 @@ def login_view(request):
             password = form.cleaned_data.get("password")
             user = authenticate(request=request, username=username, password=password)
 
+            # 존재하는 유저인 경우
             if user is not None:
-                login(request, user)
-                return redirect("main")
+                # 인증되지 않은 유저인 경우
+                if not user.authenticated:
+                    return redirect("kakao_auth", user.username)
+
+                # 인증된 유저인 경우
+                else:
+                    login(request, user)
+                    return redirect("main")
+        form = UserLoginForm()
+        return render(request, 'login.html', {'form': form, 'login_failed':True})
 
     else:
         form = UserLoginForm()
-        return render(request, 'login.html', {'form': form})
+        return render(request, 'login.html', {'form': form, 'login_failed':False})
 
 
 def __logout(request):
