@@ -1,3 +1,7 @@
+from Crypto.Cipher import AES
+
+from match_tattoo.settings import SECRET_KEY
+
 from .models import Customer
 from .forms import CustomerSignUpForm, TattooistSignUpForm
 
@@ -131,3 +135,43 @@ class UserSignupChecker:
 
         def is_valid(self):
             return self.username and self.password and self.email and self.nickname and self.unknown
+
+# plain_text의 길이가 multiple_of의 배수인 경우 그대로 리턴해주고
+# 만약 배수가 아닌 경우 한 번 더 multiple_of만큼 더한?길이로 p를 더해 맞춰줌
+# 뭔가 잘못되면 None을 리턴
+def padding_to_multiple_of(plain_text: str, p='*', multiple_of=16):
+    class InvalidPaddingCharLength(Exception):
+        pass
+
+    try:
+        if len(p) != 1:
+            raise InvalidPaddingCharLength
+        else:
+            if len(plain_text) % multiple_of == 0:
+                return plain_text
+            else:
+                required_padding_length = ((len(plain_text)//16) + 1) * 16 - len(plain_text)
+                return plain_text + (p * required_padding_length)
+
+    except InvalidPaddingCharLength:
+        print(f"The length of p is not 1: {p}")
+        return None
+
+# 평문에 첨가된 padding을 빼줌
+def remove_padding(padded_text: str, p="*") -> str:
+    return ''.join(padded_text.split('*'))
+
+# secret key로부터 24자리의 AES 대칭 키를 생성
+def get_AES_symmetric_key():
+    return SECRET_KEY["SECRET_KEY"][:-2:2]
+
+# 카카오 코드 암호화
+def kakao_encrypt(plain: str) -> bytes:
+    crypto_obj =AES.new(get_AES_symmetric_key().encode("utf8"), AES.MODE_ECB)
+    padded_plain = padding_to_multiple_of(plain)
+    return crypto_obj.encrypt(padded_plain.encode("utf8"))
+
+# 카카오 코드 복호화
+def kakao_decrypt(crypto: bytes) -> str:
+    crypto_obj =AES.new(get_AES_symmetric_key().encode("utf8"), AES.MODE_ECB)
+    return remove_padding(crypto_obj.decrypt(crypto).decode("utf8"))

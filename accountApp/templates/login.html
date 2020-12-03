@@ -13,6 +13,11 @@ LOGIN
 <section>
     <form method="POST" >
         {% csrf_token %}
+        {% if login_failed %}
+        <p style="color: red;">
+            존재하지 않는 계정이거나, 잘못된 정보입니다.
+        </p>
+        {% endif %}
         <p>
             <span>ID </span>
             {{ form.username }}

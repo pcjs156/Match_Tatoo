@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Login Again Please!
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login_for_kakao_auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section>
+    {% if already_used_kakao_id %}
+        {# 이미 인증된 카카오 계정인 경우 뜨는 화면 #}
+        <p>이미 계정 "{{ authenticated_id }}"로 인증된 카카오 계정입니다.</p>
+        <p><a href="{% url 'main' %}">홈으로 가기</a></p>
+    {% else %}
+        {# 카카오 인증을 위해 다시 한 번 로그인 해야될 때 보이는 화면 #}
+        <p>인증을 위해 다시 한 번 로그인 해주세요.</p>
+        <form method="POST" >
+        {% csrf_token %}
+        <p>
+            <span>ID </span>
+            {{ form.username }}
+        </p>
+        <p>
+            <span>PW </span>
+            {{ form.password }}
+        </p>
+
+        <input type="submit" value="로그인">
+    </form>
+    {% endif %}
+</section>
+{% endblock %}

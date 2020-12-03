@@ -31,6 +31,8 @@ class Customer(AbstractUser):
 
     # 인증 여부
     authenticated = models.BooleanField(default=False, verbose_name="인증 여부")
+    # 암호화된 카카오톡 고유 ID
+    kakao_code = models.CharField(max_length=80, blank=True, null=True, verbose_name="카카오톡 고유 ID")
 
     # 팔로워
     follower = models.ManyToManyField("accountApp.Customer", blank=True, verbose_name="팔로워")
