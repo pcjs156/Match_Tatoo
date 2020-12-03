@@ -11,4 +11,4 @@ class PortfolioForm(forms.ModelForm):
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['tattooist', 'customer','description']
+        fields = ['description']

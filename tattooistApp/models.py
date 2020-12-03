@@ -67,10 +67,10 @@ class Message(models.Model):
         verbose_name = "메시지"
     
     # 수신자: tattooist
-    tattooist = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True, related_name="message_tattooist", verbose_name="메세지 수신자")
+    receiver = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True, related_name="message_tattooist", verbose_name="메세지 수신자")
     
     # 발신자: customer
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True, related_name="message_customer", verbose_name="메세지 발신자")
+    sender = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True, related_name="message_customer", verbose_name="메세지 발신자")
     
     # 발송 일자
     send_datetime = models.DateTimeField(auto_now_add=True, verbose_name="전송 일/시간")
@@ -83,4 +83,4 @@ class Message(models.Model):
             body = self.description[:10] + "..."
         else:
             body = self.description[:]
-        return f"[{self.tattooist}, on {self.send_datetime}] " + body
+        return f"[{self.sender}, on {self.send_datetime}] " + body

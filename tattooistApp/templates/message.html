@@ -11,6 +11,34 @@ MESSAGE TO {{ 타투이스트_닉네임 }}
 
 {% block content %}
 <section>
+    
+
+    {%for message in messages%}    
+    {{message.send_datetime.date}}
+    <br>
+    {{message.send_datetime.time}}
+    {{message.description}}
+    {{message.sender.nickname}}
+    <img style="width: 3rem; height: 3rem; border-radius: 50%;" src="{{ message.customer.user_image.url }}" alt="{{ message.customer }}의 프로필 사진">
+    
+    {%if forloop.counter in next_person%}
+    <hr>
+    {%else%}
+    <br><br>
+    {%endif%}
+    {%endfor%}
+
+    <div>
+        <form method="POST" action="">
+            {%csrf_token%}
+            {{form.description}}
+            <button type="submit">전송</button>
+        </form>
+    </div>
+
+    {{next_date}}
+    {{next_person}}
+    {{test}}
 
 </section>
 {% endblock %}

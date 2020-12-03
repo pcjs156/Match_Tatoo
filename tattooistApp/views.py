@@ -2,12 +2,14 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from datetime import date
 
 from django.utils.datastructures import MultiValueDictKeyError
 
 from accountApp.models import Customer
 from matchingApp.models import Matching
-from tattooistApp.models import Review, Portfolio
+from tattooistApp.models import Review, Portfolio, Message
 
 from .forms import PortfolioForm, MessageForm
 
@@ -66,9 +68,95 @@ def detail_portfolio_view(request, tattooist_id: int, portfolio_id: int):
 
 # 타투이스트와 메시지를 주고 받는 페이지
 # tattooist/message/<tattooist_id: int>
+# @login_required(login_url="/account/login")
+# def message_view(request, tattooist_id: int, customer_id: int):
+#     # 만약 로그인하지 않았거나, 쪽지함 관계 유저가 아닌 경우
+#     if not request.user.is_authenticated or not(request.user.id == tattooist_id or request.user.id == customer_id):
+#         return HttpResponse('유효하지 않은 접근입니다.')
+
+#     content = dict()
+#     tattooist = get_object_or_404(Customer, pk=tattooist_id)
+#     customer = get_object_or_404(Customer, pk=customer_id)
+
+#     # 유저가 타투이스트인지 확인
+#     is_sender_tattooist = request.user.is_tattooist
+#     content["is_sender_tattooist"] = is_sender_tattooist
+
+#     # 하나의 뷰 내에서 사용자의 수/발신 구분없이 모두 처리하기 위해 아래와 같이 구현
+#     messages = Message.objects.filter(Q(tattooist=tattooist_id, customer=customer_id) |
+#                                      Q(tattooist=customer_id, customer=tattooist_id)).order_by("send_datetime")
+#     content["messages"] = messages
+
+#     if request.method == "POST":
+#         form = MessageForm(request.POST)
+
+#         if form.is_valid():
+#             message = form.save(commit=False)
+#             message.customer = customer
+#             message.tattooist = tattooist
+#             message.save()
+#             return redirect("message", tattooist_id, customer_id)
+#         else:
+#             return HttpResponse('It is not valid')
+
+#     else:
+#         form = MessageForm()
+#         content["form"] = form
+#         return render(request, "message.html", content)
+
 @login_required(login_url="/account/login")
-def message_view(request, tattooist_id: int):
-    return render(request, "message.html")
+def message_view(request, receiver_id: int, sender_id: int):
+    # 만약 로그인하지 않았거나, 쪽지함 관계 유저가 아닌 경우
+    if not request.user.is_authenticated or request.user.id != sender_id:
+        return HttpResponse('유효하지 않은 접근입니다.')
+
+    content = dict()
+    receiver = get_object_or_404(Customer, pk=receiver_id)
+    sender = get_object_or_404(Customer, pk=sender_id)
+
+    # 하나의 뷰 내에서 사용자의 수/발신 구분없이 모두 처리하기 위해 아래와 같이 구현
+    messages = Message.objects.filter(Q(receiver=receiver_id, sender=sender_id) |
+                                    Q(receiver=sender_id, sender=receiver_id)).order_by("send_datetime")
+    content["messages"] = messages
+
+    prev_date = None
+    prev_person = None
+    next_date = []
+    next_person = []
+
+    for idx, message in enumerate(messages):
+        present_date = message.send_datetime.date
+        present_person = message.sender
+        if idx > 0 and present_date != prev_date:
+            next_date.append(idx)
+        if idx > 0 and present_person != prev_person:
+            next_person.append(idx)
+        prev_person = message.sender
+        prev_date = message.send_datetime.date
+
+    content["next_date"] = next_date
+    content["next_person"] = next_person
+    content["test"] = prev_date
+    
+
+
+
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.receiver = receiver
+            message.save()
+            return redirect("message", receiver_id, sender_id)
+        else:
+            return HttpResponse('It is not valid')
+
+    else:
+        form = MessageForm()
+        content["form"] = form
+        return render(request, "message.html", content)
 
 
 # 포트폴리오를 수정하는 페이지
