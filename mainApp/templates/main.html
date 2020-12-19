@@ -22,9 +22,11 @@ MAIN
         <p>최신 매칭 타투</p>
         <p>매칭을 기다리는 <u>{{ total_unmatched_matching_cnt }}개</u>의 타투가 있어요!</p>
         {% for matching in latest_matchings %}
-            <div>
-                <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
-            </div>
+            <a href="{% url 'detail_matching' matching.author.id matching.id %}">
+                <div style="width: 10rem; background-color: lightgray">
+                    <img style="width: 10rem;" src="{{ matching.image.url }}" alt="{{ matching }}">
+                </div>
+            </a>
         {% endfor %}
     </article>
 
@@ -32,9 +34,11 @@ MAIN
     <article>
         <p>인기 매칭 타투</p>
         {% for matching in popular_matchings %}
-            <div>
-                <a href="{% url 'detail_matching' matching.author.id matching.id %}">{{ matching.title }}</a>
-            </div>
+            <a href="{% url 'detail_matching' matching.author.id matching.id %}">
+                <div style="width: 10rem; background-color: lightgray">
+                    <img style="width: 10rem;" src="{{ matching.image.url }}" alt="{{ matching }}">
+                </div>
+            </a>
         {% endfor %}
     </article>
 
