@@ -3,6 +3,8 @@ web_venv
 email_info.json
 secret_key.json
 kakao_rest_api_datas.json
+.idea/*
+.idea/
 
 # =========================
 
