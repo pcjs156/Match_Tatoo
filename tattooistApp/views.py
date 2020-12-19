@@ -81,6 +81,26 @@ def detail_portfolio_view(request, tattooist_id: int, portfolio_id: int):
     return render(request, "detail_portfolio.html", content)
 
 
+# 팔로우 버튼이 눌린 경우 해당 유저가 로그인 되어 있는지 먼저 검사하고
+# 만약 로그인했을 경우, 팔로우를 누르지 않았다면 팔로우, 팔로우를 눌렀다면 팔로우 해제
+@login_required(login_url="/account/login")
+def follow_pressed(request, tattooist_id):
+    # 대상 타투이스트
+    tattooist: Customer = Customer.objects.get(pk=tattooist_id)
+    # 나
+    me: Customer = request.user
+
+    # 만약 팔로우를 누르지 않았다면 팔로우
+    if tattooist not in me.following.all():
+        me.following.add(tattooist)
+        me.save()
+    # 만약 팔로우를 눌렀다면 팔로우 해제
+    else:
+        me.following.remove(tattooist)
+        me.save()
+
+    return redirect("tattooist_profile", tattooist_id)
+
 # 타투이스트와 메시지를 주고 받는 페이지
 # tattooist/message/<tattooist_id: int>
 @login_required(login_url="/account/login")
@@ -148,8 +168,16 @@ def tattooist_profile_view(request, tattooist_id):
     tattooist: Customer = get_object_or_404(Customer, pk=tattooist_id)
     content["tattooist"] = tattooist
 
+    # 현재 화면을 보고 있는 유저가 로그인해 있고, 타투이스트를 팔로우 하고 있는 경우
+    if request.user.is_authenticated and tattooist in request.user.following.all():
+        now_following = True
+    else:
+        now_following = False
+    content['now_following'] = now_following
+
     # 팔로워 수
     follower_count = tattooist.get_follower_number()
+    content["follower_count"] = follower_count
 
     # 만약 해당 유저가 타투이스트가 아닌 경우
     if not tattooist.is_tattooist:
@@ -207,7 +235,6 @@ def tattooist_profile_view(request, tattooist_id):
             content["menu"] = "portfolio"
 
     content["is_tattooist"] = is_tattooist
-    content["follower_count"] = follower_count
     content["review_possible"] = review_possible
 
     return render(request, "tattooist_profile.html", content)

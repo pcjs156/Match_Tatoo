@@ -28,9 +28,21 @@
         <p>본문</p>
         <p>{{ matching.description }}</p>
     </p>
+</section>
 
-    <hr>
+<hr>
 
+<section>
+    <p>
+        {{ matching.author.nickname }}
+        <a href="{% url 'follow_pressed' matching.author.id %}"><button>
+            {% if now_following %}
+                ❤ {{ follower_count }}
+            {% else %}
+                🤍 {{ follower_count }}
+            {% endif %}
+        </button></a>
+    </p>
     <p>{{ like_message }}</p>
     <p>
         <a href="{% url 'matching_like_pressed' matching.id %}">

@@ -28,7 +28,13 @@ Profile of {{ tattooist.nickname }}
             {% else %} {# else: is_owner #}
                 {# 해당 페이지의 주인이 아닐 경우 #}
                 <p>
-                    <button>follow</button>
+                    <a href="{% url 'follow_pressed' tattooist.id %}"><button>
+                        {% if now_following %}
+                            ❤ {{ follower_count }}
+                        {% else %}
+                            🤍 {{ follower_count }}
+                        {% endif %}
+                    </button></a>
                     <button>쪽지 보내기</button>
                     {% if review_possible %}
                         {# 리뷰 작성이 가능한 경우 #}

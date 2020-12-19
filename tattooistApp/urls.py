@@ -8,6 +8,7 @@ urlpatterns = [
     path("delete_portfolio/<int:portfolio_id>", views.delete_portfolio, name="delete_portfolio"),
     path("detail_review/<int:review_id>", views.detail_review_view, name="detail_review"),
     path("detail_portfolio/<int:tattooist_id>/<int:portfolio_id>", views.detail_portfolio_view, name="detail_portfolio"),
+    path("follow_pressed/<int:tattooist_id>", views.follow_pressed, name="follow_pressed"),
     path("message/<int:tattooist_id>", views.message_view, name="message"),
     path("modify_portfolio/<int:tattooist_id>/<int:portfolio_id>", views.modify_portfolio_view, name="modify_portfolio"),
     path("modify_review_view/<int:tattooist_id>/<int:review_id>", views.modify_review_view,name="modify_review"),
