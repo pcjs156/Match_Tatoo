@@ -40,7 +40,7 @@ def main_view(request):
     content["new_tattooists"] = new_tattooists
 
     # 인기 타투이스트 목록
-    popular_tattooists = sorted(list(tattooists), key=lambda tattooist: len(tattooist.follower.all()), reverse=True)[:TATTOOIST_NUMBER]
+    popular_tattooists = sorted(list(tattooists), key=lambda tattooist: len(tattooist.following.all()), reverse=True)[:TATTOOIST_NUMBER]
     content["popular_tattooists"] = popular_tattooists
     
     # 성사되지 않은 매칭의 갯수

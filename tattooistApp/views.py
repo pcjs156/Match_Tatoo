@@ -132,6 +132,9 @@ def tattooist_profile_view(request, tattooist_id):
     tattooist: Customer = get_object_or_404(Customer, pk=tattooist_id)
     content["tattooist"] = tattooist
 
+    # 팔로워 수
+    follower_count = tattooist.get_follower_number()
+
     # 만약 해당 유저가 타투이스트가 아닌 경우
     if not tattooist.is_tattooist:
         is_tattooist = False
@@ -140,9 +143,6 @@ def tattooist_profile_view(request, tattooist_id):
         # 해당 프로필 페이지의 주인인가?
         is_owner = request.user.is_authenticated and tattooist == request.user
         content["is_owner"] = is_owner
-
-        # 팔로워 수
-        follower_count = tattooist.get_follower_number()
 
         # 리뷰를 남길 수 있는지 확인
         # 일단 로그인 한 사용자인지 확인하고,

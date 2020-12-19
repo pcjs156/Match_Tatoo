@@ -5,9 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.utils.datastructures import MultiValueDictKeyError
 
 from accountApp.AccountErrorHandler import AlreadyAuthenticatedCustomer
 from accountApp.models import Customer
+from matchingApp.models import Matching
+from tattooistApp.models import Review
 from match_tattoo.settings import DEBUG
 
 from accountApp.forms import UserLoginForm, CustomerSignUpForm
@@ -202,7 +205,79 @@ def __logout(request):
 # account/mypage
 @login_required(login_url="/account/login")
 def mypage_view(request):
-    return render(request, "mypage.html")
+    content = dict()
+
+    user: Customer = request.user
+    user_profile_image_url = user.user_image.url
+    content['user_profile_image_url'] = user_profile_image_url
+
+    # 유저 닉네임
+    nickname = user.nickname
+    content['nickname'] = nickname
+
+    # About 찜한 공고
+    liked_matchings = Matching.objects.filter(author=user).order_by('-pub_date')
+    # 찜한 공고 수
+    liked_matchings_cnt = len(liked_matchings)
+    content['liked_matchings_cnt'] = liked_matchings_cnt
+
+    # About 작성한 리뷰
+    reviews = Review.objects.filter(review_author=user).order_by('-pub_date')
+    # 작성한 리뷰의 수
+    review_cnt = len(reviews)
+    content['review_cnt'] = review_cnt
+
+    # About 팔로잉
+    following = user.following.all()
+    # 팔로우한 유저의 수
+    following_cnt = len(following)
+    content['following_cnt'] = following_cnt
+
+    try:
+        if request.GET['menu'] == 'review':
+            content['menu'] = "review"
+            # 작성한 리뷰가 없는 경우
+            if review_cnt == 0:
+                review_exists = False
+            else:
+                review_exists = True
+                content['reviews'] = reviews
+            content['review_exists'] = review_exists
+
+        elif request.GET['menu'] == 'following':
+            content['menu'] = "following"
+            # 팔로우 중인 유저가 없는 경우
+            if following_cnt == 0:
+                following_exists = False
+            else:
+                following_exists = True
+                content['following'] = following
+            content['following_exists'] = following
+
+        # 만약 GET으로 받아온 menu가 matching이면
+        # + 이외의 경우
+        else:
+            content['menu'] = "matching"
+            # 찜한 공고가 없는 경우
+            if liked_matchings_cnt == 0:
+                liked_matchings_exists = False
+            else:
+                liked_matchings_exists = True
+                content['liked_matchings'] = liked_matchings
+            content['liked_matchings_exists'] = liked_matchings_exists
+
+    # 만약 GET으로 menu가 들어오지 않았다면 matching으로 간주
+    except MultiValueDictKeyError:
+        content['menu'] = "matching"
+        # 찜한 공고가 없는 경우
+        if liked_matchings_cnt == 0:
+            liked_matchings_exists = False
+        else:
+            liked_matchings_exists = True
+            content['liked_matchings'] = liked_matchings
+        content['liked_matchings_exists'] = liked_matchings_exists
+
+    return render(request, "mypage.html", content)
 
 
 # 회원가입 전 유저 유형을 선택하는 페이지(시술자: tattooist / 피시술자: customer)

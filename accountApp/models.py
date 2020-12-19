@@ -34,8 +34,8 @@ class Customer(AbstractUser):
     # 암호화된 카카오톡 고유 ID
     kakao_code = models.CharField(max_length=80, blank=True, null=True, verbose_name="카카오톡 고유 ID")
 
-    # 팔로워
-    follower = models.ManyToManyField("accountApp.Customer", blank=True, verbose_name="팔로워")
+    # 팔로잉
+    following = models.ManyToManyField("accountApp.Customer", blank=True, verbose_name="팔로잉")
 
     # 이메일 수신 동의
     mailing_agreement = models.BooleanField(default=False, verbose_name="이메일 수신 동의")
@@ -51,12 +51,17 @@ class Customer(AbstractUser):
         return typeMarker + f" ({self.id}) " + self.nickname
 
     def get_follower_number(self):
-        follower_count = len(self.follower.all())
+        following_count = 0
+        users = Customer.objects.all()
 
-        if follower_count >= 1000:
-            follower_count = "%.1f" % (follower_count/1000) + "K"
+        for user in users:
+            if self in user.following.all():
+                following_count += 1
 
-        return follower_count
+        if following_count >= 1000:
+            following_count = "%.1f" % (following_count/1000) + "K"
+
+        return following_count
 
     def get_short_introduce(self):
         return self.introduce if len(self.introduce) < 20 else self.introduce[:17] + "..."
