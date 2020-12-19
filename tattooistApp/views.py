@@ -61,7 +61,32 @@ def delete_portfolio(request, portfolio_id: int):
 # 리뷰 디테일 페이지
 # tattooist/detail_review/<matching_id: int>/<review_id: int>
 def detail_review_view(request, review_id: int):
-    return render(request, "detail_review.html")
+    content = dict()
+
+    review = Review.objects.get(pk=review_id)
+    content['review'] = review
+
+    tattooist = review.matching.author
+    content['tattooist'] = tattooist
+
+    # 현재 화면을 보고 있는 유저가 해당 리뷰의 대상 매칭의 작성자인 경우
+    if request.user.is_authenticated and tattooist == request.user:
+        is_author = True
+    else:
+        is_author = False
+    content['is_author'] = is_author
+
+    # 현재 화면을 보고 있는 유저가 로그인해 있고, 타투이스트를 팔로우 하고 있는 경우
+    if request.user.is_authenticated and tattooist in request.user.following.all():
+        now_following = True
+    else:
+        now_following = False
+    content['now_following'] = now_following
+
+    follower_count = tattooist.get_follower_number()
+    content['follower_count'] = follower_count
+
+    return render(request, "detail_review.html", content)
 
 
 # 포트폴리오 디테일 페이지
