@@ -29,7 +29,15 @@
         {{portfolio.description}}
     </div>
     <hr>
-    <a href="{% url 'modify_portfolio' tattooist.id portfolio.id %}">TEST</a>
+
+    {% if is_author %}
+        <p>
+            <a href="{% url 'modify_portfolio' tattooist.id portfolio.id %}">포트폴리오 수정</a>
+        </p>
+        <p>
+            <a href="{% url 'delete_portfolio' portfolio.id %}">포트폴리오 삭제</a>
+        </p>
+    {% endif %}
     {#쪽지 보내기#}
 
 </section>

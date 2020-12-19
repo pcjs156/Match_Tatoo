@@ -44,6 +44,20 @@ def create_review(request, tattooist_id: int):
     pass
 
 
+@login_required(login_url="/account/login")
+def delete_portfolio(request, portfolio_id: int):
+    portfolio = Portfolio.objects.get(pk=portfolio_id)
+    author = portfolio.author
+
+    # 만약 로그인하지 않았거나, 작성자가 아닌 경우
+    if not request.user.is_authenticated or request.user.id != portfolio.author.id:
+        return redirect("customer_request_rejected")
+
+    portfolio.delete()
+
+    return redirect("tattooist_profile", author.id)
+
+
 # 리뷰 디테일 페이지
 # tattooist/detail_review/<matching_id: int>/<review_id: int>
 def detail_review_view(request, review_id: int):
@@ -58,6 +72,9 @@ def detail_portfolio_view(request, tattooist_id: int, portfolio_id: int):
     tattooist = Customer.objects.get(id=tattooist_id)
     content["tattooist"] = tattooist
 
+    is_author = request.user.is_authenticated and request.user == tattooist
+    content['is_author'] = is_author
+
     portfolio = Portfolio.objects.get(pk=portfolio_id)
     content["portfolio"] = portfolio
 
@@ -69,7 +86,6 @@ def detail_portfolio_view(request, tattooist_id: int, portfolio_id: int):
 @login_required(login_url="/account/login")
 def message_view(request, tattooist_id: int):
     return render(request, "message.html")
-
 
 # 포트폴리오를 수정하는 페이지
 # 해당 포트폴리오를 작성한 사람인지 검사해야 함
