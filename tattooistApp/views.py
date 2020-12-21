@@ -173,13 +173,18 @@ def messagebox_view(request):
     for m in Message.objects.filter(Q(customer=request.user.id)):
         array.add(m.tattooist.id)
 
-    messages = []
-    for tattooist_id in list(array):
-        message = Message.objects.filter(Q(tattooist=tattooist_id, customer=request.user.id) |
+    first_messages = []
+    last_messages = []
+    for tattooist_id in array:
+        first_message = Message.objects.filter(Q(tattooist=tattooist_id, customer=request.user.id) |
+                                         Q(tattooist=request.user.id, customer=tattooist_id)).first()
+        last_message = Message.objects.filter(Q(tattooist=tattooist_id, customer=request.user.id) |
                                          Q(tattooist=request.user.id, customer=tattooist_id)).last()
-        messages.append(message)
+        first_messages.append(first_message)
+        last_messages.append(last_message)
         # times.append(datetime.now(timezone.utc) - message.send_datetime)
 
+    messages = zip(first_messages, last_messages)
     content["messages"] = messages
     # content["times"] = times
         
