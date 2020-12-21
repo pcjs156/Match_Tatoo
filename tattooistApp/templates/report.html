@@ -11,6 +11,19 @@
 
 {% block content %}
 <section>
-
+    <article>
+        {% if report_done %}
+        {# 신고가 정상 접수 된 경우 #}
+            <div>신고가 정상 접수 되었습니다. 감사합니다.</div>
+            <div><a href="{% url 'main' %}">메인으로</a></div>
+        {% else %}
+        {# 신고가 정상 접수 되지 않았거나, 아직 작성하지 않은 경우 #}
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.description }}
+                <input type="submit" value="제출하기">
+            </form>
+        {% endif %}
+    </article>
 </section>
 {% endblock %}
