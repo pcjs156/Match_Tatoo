@@ -10,7 +10,55 @@ MESSAGE TO {{ 타투이스트_닉네임 }}
 {% endblock %}
 
 {% block content %}
+
+<!-- messages의 이전/이후 객체를 가져오기 위한 custom template filter -->
+{% load tattooistApp_extras %}
+
 <section>
+    {%for message in messages%}
+        <!-- messages의 이전/이후 객체를 가져오기 위한 변수 -->
+        {% with next_element=messages|next:forloop.counter0 %}
+        {% with previous_element=messages|previous:forloop.counter0 %}
+
+        <!-- YYYY년 MM월 DD일 표기 -->
+        {% if message.send_datetime.date != previous_element.send_datetime.date %}
+            {{message.send_datetime.date}}
+        {% endif %}
+
+        <!-- 채팅 사용자 구분을 통한 닉네임, 프로필 사진 출력 -->
+        {% if not message.customer.id == previous_element.customer.id %}
+            <hr>
+            <span>
+                {{message.customer.nickname}}
+                <img style="width: 3rem; height: 3rem; border-radius: 50%;" src="{{ message.customer.user_image.url }}" alt="{{ message.customer }}의 프로필 사진">
+            </span>
+        {% endif %}
+
+        <div>{{message.description}}</div>
+
+        <!-- 채팅 시간 출력 -->
+        {% if message.send_datetime.time.minute != next_element.send_datetime.time.minute or message.customer.id != next_element.customer.id %}
+            {{message.send_datetime.time.hour}}:{{message.send_datetime.time.minute}}
+        {% endif %}
+
+    {% endwith %}
+    {% endwith %}
+    {%endfor%}
+
+    <div>
+        <form method="POST" action="">
+            {%csrf_token%}
+            {{form.description}}
+            <button type="submit">전송</button>
+        </form>
+    </div>
+
+    {{next_date}}
+    {{next_person}}
+
+    {{prev_date}}
+    {{present_date}}
+    
 
 </section>
 {% endblock %}
