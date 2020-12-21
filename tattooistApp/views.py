@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404,redirect
@@ -6,8 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 
 from accountApp.models import Customer
+from mainApp.models import Report
 from matchingApp.models import Matching
 from tattooistApp.models import Review, Portfolio
+from mainApp.forms import ReportForm
 
 from .forms import PortfolioForm, MessageForm
 
@@ -176,7 +180,23 @@ def modify_review_view(request, tattooist_id: int, review_id: int):
 # tattooist/report
 @login_required(login_url="/account/login")
 def report_view(request):
-    return render(request, "report.html")
+    content = dict()
+
+    if request.method == "POST":
+        form = ReportForm(request.POST)
+
+        if form.is_valid():
+            report: Report = form.save(commit=False)
+            report.customer = request.user
+            report.save()
+
+        return redirect("main")
+
+    else:
+        form = ReportForm()
+        content["form"] = form
+
+        return render(request, "report.html", content)
 
 
 # 타투이스트 프로필 페이지
