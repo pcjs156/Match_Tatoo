@@ -4,15 +4,18 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from datetime import date, timedelta, datetime, timezone
+from pytz import utc
 
 from django.utils.datastructures import MultiValueDictKeyError
 
 from accountApp.models import Customer
 from mainApp.models import Report
 from matchingApp.models import Matching
-from tattooistApp.models import Review, Portfolio
-from mainApp.forms import ReportForm
+from tattooistApp.models import Review, Portfolio, Message
 
+from mainApp.forms import ReportForm
 from .forms import PortfolioForm, MessageForm
 
 # 포트폴리오 등록 페이지
@@ -131,10 +134,65 @@ def follow_pressed(request, tattooist_id):
     return redirect("tattooist_profile", tattooist_id)
 
 # 타투이스트와 메시지를 주고 받는 페이지
-# tattooist/message/<tattooist_id: int>
+# tattooist/message/<customer_id: int> to <tattooist_id: int>
 @login_required(login_url="/account/login")
-def message_view(request, tattooist_id: int):
-    return render(request, "message.html")
+def message_view(request, customer_id: int, tattooist_id: int):
+    # 만약 로그인하지 않았거나, 쪽지함 관계 유저가 아닌 경우
+    if (not request.user.is_authenticated) or request.user.id != customer_id:
+        return HttpResponse('유효하지 않은 접근입니다.')
+
+    content = dict()
+    tattooist = get_object_or_404(Customer, pk=tattooist_id)
+    customer = get_object_or_404(Customer, pk=customer_id)
+
+    # 하나의 뷰 내에서 사용자의 수/발신 구분없이 모두 처리하기 위해 아래와 같이 구현
+    messages = Message.objects.filter(Q(tattooist=tattooist_id, customer=customer_id) |
+                                      Q(tattooist=customer_id, customer=tattooist_id)).order_by("send_datetime")
+    content["messages"] = messages
+
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.customer = customer
+            message.tattooist = tattooist
+            message.save()
+            return redirect("message", customer_id, tattooist_id, )
+        else:
+            return HttpResponse('It is not valid')
+
+    else:
+        form = MessageForm()
+        content["form"] = form
+        return render(request, "message.html", content)
+
+# 메시지함
+# tattooist/messagebox
+@login_required(login_url="/account/login")
+def messagebox_view(request):
+    content = dict()
+
+    array = set()
+    # times = []
+    for m in Message.objects.filter(Q(customer=request.user.id)):
+        array.add(m.tattooist.id)
+
+    first_messages = []
+    last_messages = []
+    for tattooist_id in array:
+        first_message = Message.objects.filter(Q(tattooist=tattooist_id, customer=request.user.id) |
+                                         Q(tattooist=request.user.id, customer=tattooist_id)).first()
+        last_message = Message.objects.filter(Q(tattooist=tattooist_id, customer=request.user.id) |
+                                         Q(tattooist=request.user.id, customer=tattooist_id)).last()
+        first_messages.append(first_message)
+        last_messages.append(last_message)
+        # times.append(datetime.now(timezone.utc) - message.send_datetime)
+
+    messages = zip(first_messages, last_messages)
+    content["messages"] = messages
+    # content["times"] = times
+        
+    return render(request, "messagebox.html", content)
 
 # 포트폴리오를 수정하는 페이지
 # 해당 포트폴리오를 작성한 사람인지 검사해야 함

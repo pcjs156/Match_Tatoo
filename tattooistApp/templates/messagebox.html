@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+MESSAGE BOX
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/messagebox.css' %}">
+{% endblock %}
+
+{% block content %}
+<section>
+    {{request.user.nickname}}님의 쪽지함
+    <!-- <hr>
+    전체 메세지를 검색 가능하게 해야할까...?
+    <div>search bar</div>
+    <hr> -->
+
+    <hr>
+
+    {% for first_message, last_message in messages %}
+        {% if request.user.is_tattooist %}
+        <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.customer.id %}'">
+            <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.customer.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
+            <br> 수신자 : {{first_message.customer.nickname}}
+            <br> 내용 : {{last_message.description}}
+            <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
+        </div>
+        {% else %}
+        <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.tattooist.id %}'">
+            <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.tattooist.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
+            <br> 수신자 : {{first_message.tattooist.nickname}}
+            <br> 내용 : {{last_message.description}}
+            <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
+        </div>
+        {%endif%}
+    {% endfor %}
+        
+</section>
+{% endblock %}
