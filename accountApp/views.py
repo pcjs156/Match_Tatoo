@@ -216,7 +216,7 @@ def mypage_view(request):
     content['nickname'] = nickname
 
     # About 찜한 공고
-    liked_matchings = Matching.objects.filter(author=user).order_by('-pub_date')
+    liked_matchings = Matching.objects.filter(likers=user).order_by('-pub_date')
     # 찜한 공고 수
     liked_matchings_cnt = len(liked_matchings)
     content['liked_matchings_cnt'] = liked_matchings_cnt
