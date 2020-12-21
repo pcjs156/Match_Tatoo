@@ -3,7 +3,8 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from datetime import date
+from datetime import date, timedelta, datetime, timezone
+from pytz import utc
 
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -165,7 +166,24 @@ def message_view(request, customer_id: int, tattooist_id: int):
 # tattooist/messagebox
 @login_required(login_url="/account/login")
 def messagebox_view(request):
-    pass
+    content = dict()
+
+    array = set()
+    # times = []
+    for m in Message.objects.filter(Q(customer=request.user.id)):
+        array.add(m.tattooist.id)
+
+    messages = []
+    for tattooist_id in list(array):
+        message = Message.objects.filter(Q(tattooist=tattooist_id, customer=request.user.id) |
+                                         Q(tattooist=request.user.id, customer=tattooist_id)).last()
+        messages.append(message)
+        # times.append(datetime.now(timezone.utc) - message.send_datetime)
+
+    content["messages"] = messages
+    # content["times"] = times
+        
+    return render(request, "messagebox.html", content)
 
 # 포트폴리오를 수정하는 페이지
 # 해당 포트폴리오를 작성한 사람인지 검사해야 함

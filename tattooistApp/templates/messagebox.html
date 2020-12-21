@@ -11,6 +11,23 @@ MESSAGE BOX
 
 {% block content %}
 <section>
+    {{request.user.nickname}}님의 쪽지함
+    <!-- <hr>
+    전체 메세지를 검색 가능하게 해야할까...?
+    <div>search bar</div>
+    <hr> -->
+
+    <hr>
+
+    {% for message in messages %}
+    <br>
+        <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id message.tattooist.id %}'">
+            <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ message.tattooist.user_image.url }}" alt="{{ message.customer }}의 프로필 사진">
+            <br> 수신자 : {{message.tattooist.nickname}}
+            <br> 내용 : {{message.description}}
+            <br> 마지막 대화시간 : {{message.send_datetime|timesince}} 전
+        </div>
+    {% endfor %}
 
 </section>
 {% endblock %}

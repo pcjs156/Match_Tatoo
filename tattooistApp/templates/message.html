@@ -38,7 +38,7 @@ MESSAGE TO {{ 타투이스트_닉네임 }}
 
         <!-- 채팅 시간 출력 -->
         {% if message.send_datetime.time.minute != next_element.send_datetime.time.minute or message.customer.id != next_element.customer.id %}
-            {{message.send_datetime.time.hour}}:{{message.send_datetime.time.minute}}
+        {{message.send_datetime|date:"H:i"}}
         {% endif %}
 
     {% endwith %}
