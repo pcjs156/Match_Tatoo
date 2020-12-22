@@ -2,6 +2,7 @@ from datetime import datetime
 
 import requests
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -18,7 +19,6 @@ from accountApp.tools import UserSignupChecker, TattooistSignUpForm
 
 from tools import json_to_dict
 from .tools import kakao_encrypt, kakao_decrypt
-
 
 # 로그인이 이미 되어 있는데 로그인을 시도하는 경우 이동되는 페이지
 # 이미 로그인 되어 있는지 확인해야 함
@@ -306,10 +306,17 @@ def signup_customer_view(request):
         validity_checker = UserSignupChecker(form)
         content["validity_check"] = validity_checker
 
+        # 비밀번호가 4자리 이하인 경우, 사용자에게 알림
+        if len(request.POST["password1"]) <= 4:
+            messages.error(request, "비밀번호가 너무 짧습니다.")
+
+            # 입력한 정보가 담겨 있는 form으로 갱신
+            content["form"] = CustomerSignUpForm(request.POST, request.FILES)
+            return render(request, 'signup_customer.html', content)
+
         # 만약 False가 validity_check_dict.values에 있다면
         # 뭔가 문제가 생긴 것임으로 다시 입력해야 함
-        if not validity_checker.is_valid():
-            # 입력한 정보가 담겨 있는 form으로 갱신
+        elif not validity_checker.is_valid():
             content["form"] = CustomerSignUpForm(request.POST, request.FILES)
             return render(request, 'signup_customer.html', content)
 
@@ -340,10 +347,17 @@ def signup_tattooist_view(request):
         validity_checker = UserSignupChecker(form)
         content["validity_check"] = validity_checker
 
+        # 비밀번호가 4자리 이하인 경우, 사용자에게 알림
+        if len(request.POST["password1"]) <= 4:
+            messages.error(request, "비밀번호가 너무 짧습니다.")
+            
+            # 입력한 정보가 담겨 있는 form으로 갱신
+            content["form"] = TattooistSignUpForm(request.POST, request.FILES)
+            return render(request, 'signup_tattooist.html', content)
+
         # 만약 False가 validity_check_dict.values에 있다면
         # 뭔가 문제가 생긴 것임으로 다시 입력해야 함
-        if not validity_checker.is_valid():
-            # 입력한 정보가 담겨 있는 form으로 갱신
+        elif not validity_checker.is_valid():
             content["form"] = TattooistSignUpForm(request.POST, request.FILES)
             return render(request, 'signup_tattooist.html', content)
 

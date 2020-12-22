@@ -12,6 +12,12 @@ CUSTOMER SIGNUP
 
 {% block content %}
 <section>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags %} <script>alert("{{ message }}")</script> {% endif %}
+        {% endfor %}
+    {% endif %}
+
     {% if not validity_check.unknown %}
         <!-- 유효하지 않은 입력을 받았을 때 -->
         <p class="error_message">입력 정보를 다시 확인해주세요.</p>
