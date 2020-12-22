@@ -1,12 +1,11 @@
-from datetime import datetime
+from datetime import datetime, date # , timedelta, datetime, timezone
+# from pytz import utc
 
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from datetime import date, timedelta, datetime, timezone
-from pytz import utc
 
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -16,7 +15,7 @@ from matchingApp.models import Matching
 from tattooistApp.models import Review, Portfolio, Message
 
 from mainApp.forms import ReportForm
-from .forms import PortfolioForm, MessageForm
+from .forms import PortfolioForm, MessageForm, ReviewForm
 
 # 포트폴리오 등록 페이지
 # tattooist만 접근 가능해야 함
@@ -48,7 +47,27 @@ def create_portfolio_view(request):
 # (tattooist/create_review/<tattooist_id: int>)
 @login_required(login_url="/account/login")
 def create_review(request, tattooist_id: int):
-    pass
+    # 로그인 하지 않았거나, 커스터머가 아닌 사용자가 접근할 경우
+    if not request.user.is_authenticated or request.user.is_tattooist:
+        return HttpResponse('유효하지 않은 접근입니다.')
+        
+    if request.method == "POST":
+        form = ReviewForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.review_author = request.user
+            review.pub_date = datetime.now()
+            review.save()
+            return redirect("tattooist_profile", tattooist_id)
+        else:
+            return HttpResponse('It is not valid')
+
+    else:
+        form = ReviewForm()
+        return render(request, "create_review.html", {'form':form})
+
+    
 
 
 @login_required(login_url="/account/login")
@@ -230,8 +249,31 @@ def modify_portfolio_view(request, tattooist_id: int, portfolio_id: int):
 # 해당 타투이스트에게 리뷰를 남긴 기록이 있는지 확인해야 함
 # tattooist/modify_review/<tattooist_id: int>/<review_id: int>
 @login_required(login_url="/account/login")
-def modify_review_view(request, tattooist_id: int, review_id: int):
-    return render(request, "modify_review.html")
+def modify_review_view(request, review_id: int):
+    review = Review.objects.get(pk=review_id)
+
+    # 만약 로그인하지 않았거나, 작성자가 아닌 경우
+    if not request.user.is_authenticated or request.user.id != review.review_author.id:
+        return HttpResponse('유효하지 않은 접근입니다.')
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            updated_review = form.save(commit=False)
+            review.review_author = updated_review.review_author
+            review.review_image = updated_review.review_image
+            review.pub_date = datetime.now()
+            review.description = updated_review.description
+
+            review.save()
+            return redirect("detail_review", review_id)
+        else:
+            return render(request, "modify_review.html", {'form':form})
+
+    else:
+        form = ReviewForm(instance=review)
+        return render(request, "modify_review.html", {'form':form})
 
 
 # 개발자에게 쪽지 보내기

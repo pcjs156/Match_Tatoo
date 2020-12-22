@@ -12,7 +12,7 @@ urlpatterns = [
     path("message/<int:customer_id>to<int:tattooist_id>", views.message_view, name="message"),
     path("messagebox/", views.messagebox_view, name="messagebox"),
     path("modify_portfolio/<int:tattooist_id>/<int:portfolio_id>", views.modify_portfolio_view, name="modify_portfolio"),
-    path("modify_review_view/<int:tattooist_id>/<int:review_id>", views.modify_review_view,name="modify_review"),
+    path("modify_review/<int:review_id>", views.modify_review_view,name="modify_review"),
     path("report", views.report_view, name="report"),
     path("tattooist_profile/<int:tattooist_id>", views.tattooist_profile_view, name="tattooist_profile"),
 ]

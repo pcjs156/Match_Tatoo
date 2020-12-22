@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Portfolio, Message
+from .models import Portfolio, Message, Review
 
 class PortfolioForm(forms.ModelForm):
     class Meta:
@@ -12,3 +12,8 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['description']
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['matching', 'score', 'review_image', 'description']

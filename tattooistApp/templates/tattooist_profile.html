@@ -38,7 +38,7 @@ Profile of {{ tattooist.nickname }}
                     <a href="{% url 'message' request.user.id tattooist.id %}"><button>쪽지 보내기</button></a>
                     {% if review_possible %}
                         {# 리뷰 작성이 가능한 경우 #}
-                        <button>리뷰 작성하기</button>
+                        <a href="{% url 'create_review' tattooist.id %}"><button>리뷰 작성하기</button></a>
                     {% else %}
                         {# 리뷰 작성이 불가능한 경우 #}
                         <button disabled>리뷰 작성 불가능</button>
