@@ -10,24 +10,40 @@
 {% endblock %}
 
 {% block content %}
+{% load tattooistApp_extras %}
 <section>
+    {% get_matchings request.resolver_match.kwargs.tattooist_id request.user.id as matchings %}
+    {% get_image request.resolver_match.kwargs.review_id as review_image %}
+    
     <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <p>
             <p>매칭</p>
-            <p>{{ form.matching }}</p>
+            <p>
+                <select name="matching">
+                    {% for matching in matchings %}
+                        <option value="{{matching}}">{{matching}}</option>
+                    {% endfor %}
+                </select>
+            </p>
         </p>
         
         <p>
             <p>별점</p>
             <p>{{ form.score }}</p>
         </p>
-
+        
         <p>
-            <p>사진</p>
-            <p>{{ form.review_image }}</p>
+            <p>
+                <p>현재 이미지</p>
+                <img src="{{ review_image }}">
+                <p>
+                    <p>변경 이미지</p>
+                    <input type="file" name="image" accept="image/*" id="id_image">
+                </p>
+            </p>
         </p>
-        {{description}}
+
         <p>
             <p>본문</p>
             <p>{{ form.description }}</p>

@@ -26,6 +26,9 @@ def create_portfolio_view(request):
     if not request.user.is_authenticated or not request.user.is_tattooist:
         return HttpResponse('유효하지 않은 접근입니다.')
 
+    content = dict()
+    content["tattooist_id"] = tattooist_id
+
     if request.method == "POST":
         form = PortfolioForm(request.POST, request.FILES)
 
@@ -47,10 +50,11 @@ def create_portfolio_view(request):
 # (tattooist/create_review/<tattooist_id: int>)
 @login_required(login_url="/account/login")
 def create_review(request, tattooist_id: int):
+    content = dict()
     # 로그인 하지 않았거나, 커스터머가 아닌 사용자가 접근할 경우
     if not request.user.is_authenticated or request.user.is_tattooist:
         return HttpResponse('유효하지 않은 접근입니다.')
-        
+
     if request.method == "POST":
         form = ReviewForm(request.POST, request.FILES)
 
@@ -58,6 +62,8 @@ def create_review(request, tattooist_id: int):
             review = form.save(commit=False)
             review.review_author = request.user
             review.pub_date = datetime.now()
+            # 템플릿 상에서 string 형으로 사용자가 선택한 matching의 쿼리를 받아와서 id 값만 슬라이스하여 pk로 사용
+            review.matching = Matching.objects.get(pk=request.POST.get('matching')[:1])
             review.save()
             return redirect("tattooist_profile", tattooist_id)
         else:
@@ -249,7 +255,7 @@ def modify_portfolio_view(request, tattooist_id: int, portfolio_id: int):
 # 해당 타투이스트에게 리뷰를 남긴 기록이 있는지 확인해야 함
 # tattooist/modify_review/<tattooist_id: int>/<review_id: int>
 @login_required(login_url="/account/login")
-def modify_review_view(request, review_id: int):
+def modify_review_view(request, tattooist_id: int, review_id: int):
     review = Review.objects.get(pk=review_id)
 
     # 만약 로그인하지 않았거나, 작성자가 아닌 경우
@@ -261,10 +267,18 @@ def modify_review_view(request, review_id: int):
 
         if form.is_valid():
             updated_review = form.save(commit=False)
-            review.review_author = updated_review.review_author
-            review.review_image = updated_review.review_image
             review.pub_date = datetime.now()
             review.description = updated_review.description
+            # 템플릿 상에서 string 형으로 사용자가 선택한 matching의 쿼리를 받아와서 id 값만 슬라이스하여 pk로 사용
+            review.matching = Matching.objects.get(pk=request.POST.get('matching')[:1])
+
+            try:
+                updated_image = request.FILES["review_image"]
+            # 이미지가 변경되지 않을 경우 기존 이미지를 그대로 사용
+            except MultiValueDictKeyError:
+                pass
+            else:
+                review.review_image = updated_image
 
             review.save()
             return redirect("detail_review", review_id)

@@ -10,14 +10,23 @@
 {% endblock %}
 
 {% block content %}
+{% load tattooistApp_extras %}
 <section>
-    <form method="POST" action="" enctype="multipart/form-data">
+    {% get_matchings request.resolver_match.kwargs.tattooist_id request.user.id as matchings %}
+
+    <form method="POST" action="{% url 'create_review' request.resolver_match.kwargs.tattooist_id %}" enctype="multipart/form-data">
         {% csrf_token %}
         <p>
             <p>매칭</p>
-            <p>{{ form.matching }}</p>
+            <p>
+                <select name="matching">
+                    {% for matching in matchings %}
+                        <option value="{{matching}}">{{matching}}</option>
+                    {% endfor %}
+                </select>
+            </p>
         </p>
-        
+
         <p>
             <p>별점</p>
             <p>{{ form.score }}</p>
@@ -27,11 +36,12 @@
             <p>사진</p>
             <p>{{ form.review_image }}</p>
         </p>
-        {{description}}
+
         <p>
             <p>본문</p>
             <p>{{ form.description }}</p>
         </p>
+
         <input type="submit" value="작성 완료">
     </form>
 </section>

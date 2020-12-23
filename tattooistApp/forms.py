@@ -16,4 +16,4 @@ class MessageForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['matching', 'score', 'review_image', 'description']
+        fields = ['score', 'review_image', 'description']
