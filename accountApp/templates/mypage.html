@@ -60,7 +60,7 @@ MYPAGE
             {% if review_exists %}
             {# 작성한 리뷰가 존재하는 경우 #}
                 {% for review in reviews %}
-                    <a href="{% url 'tattooist_profile' review.matching.author_id %}">
+                    <a href="{% url 'detail_review' review.id %}">
                         <div style="width: 10rem; background-color: lightgray">
                             <img style="width: 10rem;" src="{{ review.review_image.url }}" alt="{{ review }}">
                         </div>

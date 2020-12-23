@@ -65,5 +65,11 @@ Review
             </div>
         </div>
     </article>
+
+    <a href="{% url 'modify_review' tattooist.id review.id %}"><button>
+        리뷰 수정하기
+        <!-- 이 부분은 어디에 배치할 것인지 상의하기 -->
+    </button></a>
+
 </section>
 {% endblock %}
