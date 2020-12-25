@@ -11,7 +11,9 @@ SECRET_KEY = tools.json_to_dict(secret_key_filename, "SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+        ".ap-northeast-2.compute.amazonaws.com",
+]
 
 AUTH_USER_MODEL = 'accountApp.Customer'
 
