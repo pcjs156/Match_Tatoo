@@ -18,51 +18,68 @@
         {% endblock %}
     </title>
 
+    <style>
+        html{
+            background-color: black;
+        }
+        body{
+            color:white;
+        }
+
+    </style>
+
     {% block head %}
     {% endblock %}
 </head>
 
-<body>
-    <nav style="text-align: right;">
-        <div style="text-align: left">
-            <img alt="매치 타투 로고">
-        </div>
-        <div>
-            <a href="{% url 'main' %}">MAIN</a>
-        </div>
-        {% if request.user.is_authenticated %}
-        <span>접속한 유저: {{ request.user.username }}
-            [
-                {% if request.user.nickname %}
-                {{request.user.nickname }}
-                {% else %}
-                <span style="color: red;">ERROR: 닉네임 미설정</span>
-                {% endif %}
-            ]
-        </span>
-        /
-        <span>
-            <a href="{% url 'logout' %}">로그아웃</a>
-            <a href="{% url 'mypage' %}?menu=matching">마이페이지</a>
-        </span>
-        {% else %}
-        <div>
-            <a href="{% url 'login' %}"><span>로그인</span></a>
-        </div>
-        <div>
-            <a href="{% url 'select_user_type' %}">회원가입</a>
-        </div>
-        {% endif %}
-    </nav>
-    <hr>
-    {% block content %}
-    {% endblock %}
-    <hr>
-    <footer>
-        <div>백엔드ㅣ박유빈 평주영 한경훈</div>
-        <div>프론트엔드&디자인ㅣ강영진 윤소영</div>
-        <div>국민대학교 멋쟁이 사자처럼 8기 프로젝트</div>
-    </footer>
+<body> 
+    <!-- Bulma container -->
+    <div class="container">
+        <nav style="text-align: right;">
+            <div style="text-align: left">
+                <img alt="매치 타투 로고">
+            </div>
+            <div>
+                <a href="{% url 'main' %}">MAIN</a>
+            </div>
+            {% if request.user.is_authenticated %}
+            <span>접속한 유저: {{ request.user.username }}
+                [
+                    {% if request.user.nickname %}
+                    {{request.user.nickname }}
+                    {% else %}
+                    <span style="color: red;">ERROR: 닉네임 미설정</span>
+                    {% endif %}
+                ]
+            </span>
+            /
+            <span>
+                <a href="{% url 'logout' %}">로그아웃</a>
+                <a href="{% url 'mypage' %}?menu=matching">마이페이지</a>
+            </span>
+            {% else %}
+            <div>
+                <a href="{% url 'login' %}"><span>로그인</span></a>
+            </div>
+            <div>
+                <a href="{% url 'select_user_type' %}">회원가입</a>
+            </div>
+            {% endif %}
+        </nav>
+        <hr>
+        {% block content %}
+        {% endblock %}
+        <hr>
+
+
+        <footer style="font-size:5px; color:grey;float: center;">
+            <div class="columns">
+                <div class="column" style="text-align: center;">백엔드ㅣ박유빈 평주영 한경훈</div>
+                <div class="column" style="text-align: center;">프론트엔드&디자인ㅣ강영진 윤소영</div>
+                <div class="column" style="text-align: center;">국민대학교 멋쟁이 사자처럼 8기 프로젝트</div>
+            </div>
+        </footer>
+    </div>
 </body>
 
 </html>
