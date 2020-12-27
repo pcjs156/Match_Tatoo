@@ -11,54 +11,122 @@ MAIN
 
 {% block content %}
 <section>
+
+    <!-- 이거 이름을 뭐라고 하더라 -->
     <article>
         <img alt="대표 이미지 1">
         <img alt="대표 이미지 2">
         <img alt="대표 이미지 3">
     </article>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 
     {# 최신 매칭 #}
     <article>
-        <p>최신 매칭 타투</p>
-        <p>매칭을 기다리는 <u>{{ total_unmatched_matching_cnt }}개</u>의 타투가 있어요!</p>
-        {% for matching in latest_matchings %}
-            <a href="{% url 'detail_matching' matching.author.id matching.id %}">
-                <div style="width: 10rem; background-color: lightgray">
-                    <img style="width: 10rem;" src="{{ matching.image.url }}" alt="{{ matching }}">
-                </div>
-            </a>
-        {% endfor %}
+        <p style="font-weight: bold;">최신 매칭 타투</p>
+
+        <hr class="stroke">
+
+        <p style="font-size: small;">매칭을 기다리는 <b><u>{{ total_unmatched_matching_cnt }}개</u></b>의 타투가 있어요!</p>
+<br>
+        <div class="columns">
+            {% for matching in latest_matchings %}
+                <a href="{% url 'detail_matching' matching.author.id matching.id %}" class="column">
+                    <div style="text-align: center;">
+                        <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px" src="{{ matching.image.url }}" alt="{{ matching }}">
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
     </article>
+
+
+<br>
+<br>
 
     {# 인기 매칭 #}
     <article>
-        <p>인기 매칭 타투</p>
+        <p style="font-weight: bold;">인기 매칭 타투</p>
+
+        <hr class="stroke">
+        
+        <div class="columns">
         {% for matching in popular_matchings %}
-            <a href="{% url 'detail_matching' matching.author.id matching.id %}">
-                <div style="width: 10rem; background-color: lightgray">
-                    <img style="width: 10rem;" src="{{ matching.image.url }}" alt="{{ matching }}">
+            <a href="{% url 'detail_matching' matching.author.id matching.id %}" class="column">
+                <div style="text-align: center;">
+                    <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px" src="{{ matching.image.url }}" alt="{{ matching }}">
                 </div>
             </a>
         {% endfor %}
+        </div>
     </article>
+
+<br>
+<br>
+<br>
+<br>
+<br>
 
     {# 인기 타투이스트 #}
     <article>
         <p>인기 타투이스트</p>
+
+        <hr class="stroke">
+
+        <div class="columns">
         {% for tattooist in popular_tattooists %}
-            <a href="{% url 'tattooist_profile' tattooist.id %}">
-                <div style="width: 10rem; background-color: lightgray">
-                    <img style="width: 10rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+            <a href="{% url 'tattooist_profile' tattooist.id %}" class="column">
+                <div style="text-align: center;">
+                    <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
                     <div>{{ tattooist.nickname }} (♥ x {{ tattooist.get_follower_number }})</div>
                     <div>{{ tattooist.get_short_introduce }}</div>
                 </div>
             </a>
         {% endfor %}
+        </div>
     </article>
+
+<br>
+<br>
+<br>
+<br>
+<br>
 
     {# 신규 타투이스트 #}
     <article>
         <p>신규 타투이스트</p>
+
+        <hr class="stroke">
+        
         {% for tattooist in new_tattooists %}
             <a href="{% url 'tattooist_profile' tattooist.id %}">
                 <div style="width: 10rem; background-color: lightgray">
@@ -78,5 +146,9 @@ MAIN
 
         <a href="{% url 'report' %}"><button>불편 개선 신고하기</button></a>
     </article>
+
+
 </section>
+
+
 {% endblock %}
