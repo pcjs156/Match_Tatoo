@@ -18,16 +18,16 @@ LOGIN
             존재하지 않는 계정이거나, 잘못된 정보입니다.
         </p>
         {% endif %}
-        <p>
+        <p style="text-align: center;">
             <span>ID </span>
             {{ form.username }}
         </p>
-        <p>
+        <p style="text-align: center;">
             <span>PW </span>
             {{ form.password }}
         </p>
 
-        <input type="submit" value="로그인">
+        <input type="submit" value="로그인" class="button">
     </form>
 </section>
 {% endblock %}
