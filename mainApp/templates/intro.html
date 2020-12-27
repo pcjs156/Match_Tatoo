@@ -8,34 +8,75 @@
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/e6fc3f0519.js" crossorigin="anonymous"></script>
+    
     <!-- Bulma -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
-    <link rel="stylesheet" href="{% static 'css/intro.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/intro.css' %}">
 
-    <title>MATCH-TATTO: WELCOME!</title>
+    <!-- intro.html은 base.html을 가져오지 않아서 공통 style이 변경되면 꼭! 따로 적용시켜주어야 합니다 -->
+
+    <style>
+        html{
+            background-color: black;
+        }
+        body{
+            color:white;
+            margin : 3em;
+            font-family: Noto Sans;
+            font-size: 13px;
+        }
+    </style>
+
+    <title>MATCH-TATTOO: WELCOME!</title>
 </head>
+
 
 <body>
     <section>
-        <div>
-            <img alt="로고">
-        </div>
 
-        <div>
-            <div>타투 매칭 플랫폼</div>
-            <div>
-                매칭타투 - 자신에게 맞는 타투이스트를 찾고
-                합리적인 가격으로 안전하게 시술받으세요!
+        <!-- Bulma layout tiles -->
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <article class="tile is-child box position:">
+                    <div style="float:right;">
+                        <img alt="로고">
+                    </div>
+                </article>
             </div>
-            <a href="{% url 'main' %}">홈으로 가기</a>
+            <div class="tile is-parent"></div>
+            <div class="tile is-parent"></div>
+        </div>
+        
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <article class="tile is-child box">
+                    <h3>타투 매칭 플랫폼</h3>
+                    <div>
+                        매칭타투 - 자신에게 맞는 타투이스트를 찾고<br>
+                        합리적인 가격으로 안전하게 시술받으세요!
+                    </div>
+                    <a href="{% url 'main' %}">홈으로 가기</a>
+                </article>
+            </div>
+            <div class="tile is-parent"></div>
+            <div class="tile is-parent"></div>
+        </div>
+        
+        <div class="tile is-ancestor">
+            <div class="tile is-parent"></div>
+            <div class="tile is-parent"></div>
+            <div class="tile is-parent">
+                <article class="tile is-child box">
+                    <div>로그인하고 매칭타투 둘러보기 고고</div>
+                    <a href="{% url 'login' %}"><div>로그인</div></a>
+                    <a href="{% url 'select_user_type' %}"><div>회원가입</div></a>
+                </article>
+            </div>
         </div>
 
-        <div>
-            <div>우측 하단 영역</div>
-            <a href="{% url 'login' %}"><div>로그인</div></a>
-            <a href="{% url 'select_user_type' %}"><div>회원가입</div></a>
-        </div>
+
+
     </section>
 </body>
 </html>
