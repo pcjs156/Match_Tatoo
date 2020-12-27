@@ -12,13 +12,8 @@ SECRET_KEY = tools.json_to_dict(secret_key_filename, "SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-<<<<<<< HEAD
         ".ap-northeast-2.compute.amazonaws.com",
         '127.0.0.1','localhost','x.x.x.x',
-=======
-    ".ap-northeast-2.compute.amazonaws.com",
-    "127.0.0.1",
->>>>>>> 0e0b8e51ccc59c0608be008d54f38f3b2252f55e
 ]
 
 AUTH_USER_MODEL = 'accountApp.Customer'

@@ -14,7 +14,7 @@ LOGIN
     <form method="POST" >
         {% csrf_token %}
         {% if login_failed %}
-        <p style="color: red;">
+        <p style="color: red; text-align: center;">
             존재하지 않는 계정이거나, 잘못된 정보입니다.
         </p>
         {% endif %}
@@ -26,8 +26,9 @@ LOGIN
             <span>PW </span>
             {{ form.password }}
         </p>
-
-        <input type="submit" value="로그인" class="button">
+        <p style="text-align: center;">
+        <input type="submit" value="로그인" class="button is-white"></button>
+            </p>
     </form>
 </section>
 {% endblock %}
