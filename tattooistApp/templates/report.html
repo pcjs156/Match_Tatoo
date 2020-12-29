@@ -20,8 +20,13 @@
         {# 신고가 정상 접수 되지 않았거나, 아직 작성하지 않은 경우 #}
             <form method="POST">
                 {% csrf_token %}
-                {{ form.description }}
-                <input type="submit" value="제출하기">
+                <h5>신고내용</h5> 
+                <div class="field">
+                    <div class="control">
+                      <textarea class="textarea" name="description" placeholder="Danger textarea" style="border-color:#383838; background-color:#383838; color:white"></textarea>
+                    </div>
+                </div>
+                <input class="button is-black is-inverted is-outlined" style="width: 25rem; margin-left: 35%;" type="submit" value="제출하기">
             </form>
         {% endif %}
     </article>
