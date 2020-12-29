@@ -13,6 +13,7 @@ MAIN
 
 
 <!-- style="background-image:linear-gradient(black, 50%, rgb(22,22,22),65%,rgb(30,30,30),80%,rgb(22,22,22),grey, black)" -->
+<!-- article별로 화면 넘어가는 스크롤 트리거 작동시키기 -->
 
 {% block content %}
 <!-- carousel -->
@@ -102,7 +103,7 @@ MAIN
             <a href="{% url 'tattooist_profile' tattooist.id %}" class="column">
                 <div style="text-align: center;">
                     <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px 5px 0 0;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
-                    <div style="background-color: rgba(0,0,0,0.5);padding:10% 0;border-radius:0 0 5px 5px">
+                    <div style="background-color: rgba(20,20,20);padding:10% 0;border-radius:0 0 5px 5px">
                         <div style="font-weight: bold; font-size:smaller;margin-bottom: 4px;">{{ tattooist.nickname }} (♥ x {{ tattooist.get_follower_number }})</div>
                         <div style="font-size: small;">{{ tattooist.get_short_introduce }}</div>
                     </div>
@@ -126,7 +127,7 @@ MAIN
             <a href="{% url 'tattooist_profile' tattooist.id %}" class="column">
                 <div style="text-align: center;">
                     <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px 5px 0 0;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
-                        <div style="background-color: rgba(0,0,0,0.5);padding:10% 0;border-radius:0 0 5px 5px">
+                        <div style="background-color: rgb(20, 20, 20);padding:10% 0;border-radius:0 0 5px 5px">
                         <div style="font-weight: bold; font-size:smaller;margin-bottom: 4px;">{{ tattooist.nickname }}</div>
                         <div style="font-size: small;">{{ tattooist.get_short_introduce }}</div>
                     </div>
@@ -144,12 +145,20 @@ MAIN
 
     <article>
         <div class="columns">
+
             <form class="column is-8" method="GET" action="/search_result">
-                <input id="searchbar" type="text" placeholder="타투 종류를 검색해보세요!" name="w" style="width: 46em;">
+                <div class="field has-addons">
+                    <div class="control">
+                        <input class="input" id="searchbar" type="text" placeholder="타투 종류를 검색해보세요!" name="w" size="100em">
+                    </div>
+                    <div class="control">
+                        <button class="button is-dark is-rounded" type="submit" value="검색">검색하기</button>
+                    </div>
+                </div>
             </form>
-            <div class="column is-">
-                <button type="submit" value="검색">검색하기</button> OR
-                <a href="{% url 'report' %}" style="text-align:center;"><button> 불편 개선 신고하기</button></a>
+            
+            <div class="column is-4" style="text-align: center;">
+                <a href="{% url 'report' %}" ><button class="button is-dark is-rounded">불편 개선 신고하기</button></a>
             </div>
         </div>
     </article>
