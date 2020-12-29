@@ -46,6 +46,14 @@
             opacity: 0.6;
         }
 
+        .opacity_box {
+            background-color: rgba( 0, 0, 0, 0.5 );
+        }
+
+        .roundbutton {
+            
+        }
+
 
     </style>
 
@@ -56,38 +64,52 @@
 <div class="bg">
     <section>
      <div class="container">
-        <img src="/static/match_logo.png">
+        <img style="margin-top: 3%;" src="/static/match_logo.png">
         <br>
         <br>
         <br>
-        <!-- Bulma layout tiles -->
-        <div class="tile is-ancestor">
-            <div class="tile is-4 is-vertical is-parent">
-                <article class="tile is-child box">
-                    <p class="title">타투 매칭 플랫폼</p>
-                    <p>
-                        매칭타투 - 자신에게 맞는 타투이스트를 찾고<br>
-                        합리적인 가격으로 안전하게 시술받으세요!
-                    </p>
-                    <a href="{% url 'main' %}">홈으로 가기</a>
+        <!-- Bulma layout columns -->
+        <div class="columns">
+            <div class="column is-4">
+                <article>
+                    <div class="opacity_box" style="padding:7%">
+                        <p style="font-weight:bold; font-size:large">타투 매칭 플랫폼<p>
+                            <br>
+                        <p>
+                            자신에게 맞는 타투이스트를 찾고<br>
+                            합리적인 가격으로 안전하게 시술받으세요!
+                        </p>
+                        <br>
+                        <div class="column is-6 is-offset-6">
+                            <a class="button is-rounded is-small is-fullwidth" style="text-align: center;font-weight: bold;" href="{% url 'main' %}">매칭타투 둘러보기</a>
+                        </div>
+                    </div>
                 </article>
             </div>
-            <div class="tile is-parent"></div>
-            <div class="tile is-parent"></div>
+
         </div>
-        <div style="padding-bottom: 800px;"
-        <div class="tile is-ancestor">
-            <div class="tile is-parent"></div>
-            <div class="tile is-parent"></div>
-            <div class="tile is-parent">
-                <article class="tile is-child box">
-                    <div>로그인하고 매칭타투 둘러보기 고고</div>
-                    <a href="{% url 'login' %}"><div>로그인</div></a>
-                    <a href="{% url 'select_user_type' %}"><div>회원가입</div></a>
-                </article>
+        <div style="padding-bottom: 800px;">
+            <div class="columns">
+                <div class="column is-4 is-offset-8">
+                    <article>
+                        <div class="opacity_box" style="padding:7%">
+                            <div style="font-weight:bold; font-size:large">로그인하기</div>
+                            <br>
+                            <div>타투매칭 크루들과 건강하고 합리적인 타투를 이용해보세요.</div>
+                                <br>
+                            <div class="columns">
+                                <div class="column">
+                                    <a class="button is-rounded is-small is-fullwidth" style="font-weight: bold;" href="{% url 'login' %}"><div>로그인</div></a>
+                                </div>
+                                <div class="column">
+                                    <a class="button is-rounded is-small is-fullwidth" style="font-weight: bold;" href="{% url 'select_user_type' %}"><div>회원가입</div></a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
             </div>
         </div>
-    </div>
     </section>
 </div>
 </body>

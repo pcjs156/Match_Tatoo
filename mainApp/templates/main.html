@@ -139,13 +139,19 @@ MAIN
         {% endfor %}
     </article>
 
-    <article>
-        <form method="GET" action="/search_result">
-            <input id="searchbar" type="text" placeholder="타투 검색하기.." name="w" style="width: 47em;">
-            <button type="submit" value="검색">Search</button>
-        </form>
 
-        <a href="{% url 'report' %}"><button>불편 개선 신고하기</button></a>
+
+    <article>
+        <div class="columns">
+            <form class="column is-8" method="GET" action="/search_result">
+                <input id="searchbar" type="text" placeholder="타투 검색하기.." name="w" style="width: 47em;">
+                <button type="submit" value="검색">Search</button>
+            </form>
+
+            <div class="column is-4">
+                <a href="{% url 'report' %}" style="text-align:center;"><button>불편 개선 신고하기</button></a>
+            </div>
+        </div>
     </article>
 
 
