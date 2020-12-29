@@ -18,18 +18,20 @@ LOGIN
             존재하지 않는 계정이거나, 잘못된 정보입니다.
         </p>
         {% endif %}
+        <br>
         <p style="text-align: center;">
-            
+            서비스를 이용하려면 먼저 로그인해 주세요! <br><br><br>
             <span>ID </span>
             {{ form.username }}
         </p>
         <p style="text-align: center;">
             <span>PW </span>
             {{ form.password }}
-        </p>
+        </p><br>
         <p style="text-align: center;">
         <input type="submit" value="로그인" class="button is-white"></button>
             </p>
+            <br><br>
     </form>
 </section>
 {% endblock %}
