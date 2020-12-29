@@ -26,9 +26,6 @@ def create_portfolio_view(request):
     if not request.user.is_authenticated or not request.user.is_tattooist:
         return HttpResponse('유효하지 않은 접근입니다.')
 
-    content = dict()
-    content["tattooist_id"] = tattooist_id
-
     if request.method == "POST":
         form = PortfolioForm(request.POST, request.FILES)
 
