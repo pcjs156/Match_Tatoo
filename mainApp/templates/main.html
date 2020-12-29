@@ -138,15 +138,15 @@ MAIN
     <article>
         <div class="columns">
             <form class="column is-8" method="GET" action="/search_result">
-                <input id="searchbar" type="text" placeholder="타투 검색하기.." name="w" style="width: 47em;">
-                <button type="submit" value="검색">Search</button>
+                <input id="searchbar" type="text" placeholder="타투 종류를 검색해보세요!" name="w" style="width: 46em;">
             </form>
-
-            <div class="column is-4">
-                <a href="{% url 'report' %}" style="text-align:center;"><button>불편 개선 신고하기</button></a>
+            <div class="column is-">
+                <button type="submit" value="검색">검색하기</button> OR
+                <a href="{% url 'report' %}" style="text-align:center;"><button> 불편 개선 신고하기</button></a>
             </div>
         </div>
     </article>
+    <br>
 
 
 </section></div>
