@@ -12,6 +12,10 @@ SECRET_KEY = tools.json_to_dict(secret_key_filename, "SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
+<<<<<<< HEAD
+=======
+design
+>>>>>>> 13007556079b4cb67b3f596bfa85d14431a4c2fa
         ".ap-northeast-2.compute.amazonaws.com",
         '127.0.0.1','localhost','x.x.x.x',
 ]
