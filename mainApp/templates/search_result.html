@@ -12,30 +12,46 @@ WELCOME!
 {% block content %}
 <section>
 
-    <div>
-        <form method="GET" action="/search_result">
-            <input id="searchbar" type="text" placeholder="Search" name="w" value="{{w}}" style="width: 47em;">
-            <button type="submit" value="검색">Search</button>
+    <div class="columns">
+
+        <form class="column" method="GET" action="/search_result">
+            <div class="field has-addons">
+                <div class="control has-icons-left">
+                    <input class="input" id="searchbar" type="text" placeholder="타투 검색하기..." name="w" size="150em">
+                    <span class="icon is-medium is-left"><i class="fas fa-search"></i></span>
+                </div>
+                <div class="control">
+                    <button class="button is-dark is-rounded" type="submit" value="검색">검색하기</button>
+                </div>
+            </div>
         </form>
+
     </div>
 
-    <p>'{{w}}'으로 검색한 결과물입니다.</p>
-
-    <hr>
-
     {% if search_result %}
-        {% for post in post_counts %}
-            {# 검색 결과 보여주기 #}
-            <a href="{% url 'detail_matching' post.author.id post.id %}"><p>{{ post }}</p></a>
-        {%endfor%}
 
+    <p style="color:">'{{w}}'으로 검색한 결과물입니다.</p>
+
+    <br>
+        <div class="columns is-mobile">
+            {% for post in post_counts %}
+            {# 검색 결과 보여주기 #}
+            <!-- <a href="{% url 'detail_matching' post.author.id post.id %}"><p>{{ post }}</p></a> -->
+
+                <a href="{% url 'detail_matching' post.author.id post.id %}" class="column">
+                    <div style="text-align: center;">
+                        <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px" src="{{ post.image.url }}">
+                    </div>
+                </a>
+            {%endfor%}
+        </div>
         <br>
 
         {% if post_counts.hevious %}
-                <a href="?q={{q}}&page={{post_counts.previous_page_number}}">Previous</a>
+                <a href="?q={{q}}&page={{post_counts.previous_page_number}}">⇦</a>
             {% else%}
-                <a tabindex="-1">Previous</a>
-            {% endif %}
+                <a tabindex="-1">⇦</a>
+        {% endif %}
     
             {% for i in p_range %}
             {% if i == post_counts.number %}
@@ -46,15 +62,17 @@ WELCOME!
             {% endfor %}
     
             {% if post_counts.has_next %}
-                <a href="?q={{q}}&page={{post_counts.next_page_number}}">Next</a>
+                <a href="?q={{q}}&page={{post_counts.next_page_number}}">⇨</a>
             {% else %}
-                <a tabindex="-1">Next</a>
+                <a tabindex="-1">⇨</a>
             {% endif %}
 
+<!-- 이거 작동이 안되네요ㅠㅡㅠ -->
         {% elif q %}
             "{{ q }}"는 검색 결과가 없습니다!
 
         {% else %}
+        <br>
             검색어를 입력하세요!
 
         {% endif %}

@@ -144,12 +144,14 @@ MAIN
     <br>
 
     <article>
+        
         <div class="columns">
 
             <form class="column is-8" method="GET" action="/search_result">
                 <div class="field has-addons">
-                    <div class="control">
-                        <input class="input" id="searchbar" type="text" placeholder="타투 종류를 검색해보세요!" name="w" size="100em">
+                    <div class="control has-icons-left">
+                        <input class="input" id="searchbar" type="text" placeholder="타투 검색하기..." name="w" size="100em">
+                        <span class="icon is-medium is-left"><i class="fas fa-search"></i></span>
                     </div>
                     <div class="control">
                         <button class="button is-dark is-rounded" type="submit" value="검색">검색하기</button>
@@ -160,7 +162,9 @@ MAIN
             <div class="column is-4" style="text-align: center;">
                 <a href="{% url 'report' %}" ><button class="button is-dark is-rounded">불편 개선 신고하기</button></a>
             </div>
+
         </div>
+
     </article>
     <br>
 
