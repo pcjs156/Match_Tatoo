@@ -47,13 +47,11 @@
 <body> 
     <!-- Bulma container -->
     <div class="container is-max-widescreen">
-        <nav style="text-align: right;">
             <div style="text-align: left">
-                <img alt="매치 타투 로고">
-            </div>
-            <div>
+                <img src="/static/match_logo.png" width="300px"height="100px" style="padding-top: 50px;">
+        <nav style="text-align: right; position:relative; bottom:5%;">
                 <a href="{% url 'main' %}">MAIN</a>
-            </div>
+            
             {% if request.user.is_authenticated %}
             <span>접속한 유저: {{ request.user.username }}
                 [
@@ -70,10 +68,10 @@
                 <a href="{% url 'mypage' %}?menu=matching">마이페이지</a>
             </span>
             {% else %}
-            <div>
+            
                 <a href="{% url 'login' %}"><span>로그인</span></a>
-            </div>
-            <div>
+            
+            
                 <a href="{% url 'select_user_type' %}">회원가입</a>
             </div>
             {% endif %}
@@ -84,7 +82,7 @@
         <hr>
 
 
-        <footer style="font-size:5px; color:grey;float: center;">
+        <footer style="font-size:10px; color:grey;float: center;">
             <div class="columns">
                 <div class="column" style="text-align: center;">백엔드ㅣ박유빈 평주영 한경훈</div>
                 <div class="column" style="text-align: center;">프론트엔드&디자인ㅣ강영진 윤소영</div>
