@@ -93,11 +93,15 @@ Profile of {{ tattooist.nickname }}
                                 <img style="width: 15rem; height: 15rem;" src="{{ portfolio.portfolio_image.url }}" alt="포트폴리오 이미지 {{ portfolio.id }}">
                             </a>
                         </div>
+                        {% if forloop.counter == 3 %}
+                            <div style="margin-top: 25px;"></div>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     {# 포트폴리오가 없는 경우 #}
                     <div style="text-align: center;">작성된 포트폴리오가 없습니다.</div>
                 {% endif %}
+                <br><br>
                 <p style="margin-left: 47%;">
                     {# 페이지네이션 - 이전 #}
                     {% if portfolios.has_previous %}
@@ -141,6 +145,7 @@ Profile of {{ tattooist.nickname }}
                     {# 리뷰가 없는 경우 #}
                     <div style="text-align: center;">리뷰가 아직 작성되지 않았습니다.</div>
                 {% endif %}
+                <br><br>
                 <p style="margin-left: 47%;">
                     {# 페이지네이션 - 이전 #}
                     {% if reviews.has_previous %}
