@@ -25,8 +25,26 @@
             margin : 3em;
             font-family: 'Noto Sans KR', sans-serif;
             font-size: 13px;
+            height: 100%;
+            margin:0%
+        }
+        .bg {
+            background-image: url(https://cdn.pixabay.com/photo/2018/04/05/13/56/people-3292901_1280.jpg);
+             /* Full height */
+            height: 100%; 
+             /* Center and scale the image nicely */
+             background-position: center;
+             background-repeat: no-repeat;
+             background-size: cover;
         }
         @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css); 
+        
+        div.transbox {
+            margin: 30px;
+            background-color: #ffffff;
+            border: none;
+            opacity: 0.6;
+        }
 
 
     </style>
@@ -34,38 +52,33 @@
     <title>MATCH-TATTOO: WELCOME!</title>
 </head>
 
-
 <body>
+<div class="bg">
     <section>
-        <img src="Match_Tattoo/static/admin/img/match_logo.png">
+     <div class="container">
+        <img src="/static/match_logo.png">
+        <br>
+        <br>
+        <br>
+
+        
+    
         <!-- Bulma layout tiles -->
         <div class="tile is-ancestor">
-            <div class="tile is-parent">
-                <article class="tile is-child box position:">
-                    <div style="float:right;">
-                        <img src="Match_Tattoo/static/admin/img/match_logo.png">
-                    </div>
-                </article>
-            </div>
-            <div class="tile is-parent"></div>
-            <div class="tile is-parent"></div>
-        </div>
-        
-        <div class="tile is-ancestor">
-            <div class="tile is-parent">
+            <div class="tile is-4 is-vertical is-parent">
                 <article class="tile is-child box">
-                    <h3>타투 매칭 플랫폼</h3>
-                    <div>
+                    <p class="title">타투 매칭 플랫폼</p>
+                    <p>
                         매칭타투 - 자신에게 맞는 타투이스트를 찾고<br>
                         합리적인 가격으로 안전하게 시술받으세요!
-                    </div>
+                    </p>
                     <a href="{% url 'main' %}">홈으로 가기</a>
                 </article>
             </div>
             <div class="tile is-parent"></div>
             <div class="tile is-parent"></div>
         </div>
-        
+        <div style="padding-bottom: 800px;"
         <div class="tile is-ancestor">
             <div class="tile is-parent"></div>
             <div class="tile is-parent"></div>
@@ -77,9 +90,8 @@
                 </article>
             </div>
         </div>
-
-
-
+    </div>
     </section>
+</div>
 </body>
 </html>
