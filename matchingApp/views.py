@@ -10,7 +10,7 @@ from accountApp.models import Customer
 from .models import Matching
 from .forms import MatchingForm
 
-from tools import reversed_dict, parse_dict_from_code_pair
+from tools import reversed_dict, parse_dict_from_code_pair, tuple_pair_to_dict
 from .tools import searching_keyword_validation
 
 
@@ -84,21 +84,25 @@ def matching_list_view(request):
         part = request.GET["part"]         # 타투 부위
         orderby = request.GET["order-by"]  # 정렬 방법(price/pub_date)
 
+
+        region_code = reversed_dict(tuple_pair_to_dict(Matching.REGION))[region]
         if region in [pair[1] for pair in Matching.REGION] and region != "전체":
-            result_matching_list = Matching.objects.filter(region=region, is_matched=False)
+            result_matching_list = Matching.objects.filter(region=region_code, is_matched=False)
             region_now = region
         else:
             result_matching_list = Matching.objects.filter(is_matched=False)
             unmatched_condition = True
 
+        tattoo_type_code = reversed_dict(tuple_pair_to_dict(Matching.TYPE))[tattoo_type]
         if tattoo_type in [pair[1] for pair in Matching.TYPE] and tattoo_type != "전체":
-            result_matching_list = result_matching_list.filter(tattoo_type=tattoo_type)
+            result_matching_list = result_matching_list.filter(tattoo_type=tattoo_type_code)
             tattoo_type_now = tattoo_type
         else:
             unmatched_condition = True
 
+        part_code = reversed_dict(tuple_pair_to_dict(Matching.PART))[part]
         if part in [pair[1] for pair in Matching.PART] and part != "전체":
-            result_matching_list = result_matching_list.filter(part=part)
+            result_matching_list = result_matching_list.filter(part=part_code)
             part_now = part
         else:
             unmatched_condition = True
