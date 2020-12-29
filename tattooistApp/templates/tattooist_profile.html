@@ -35,7 +35,10 @@ Profile of {{ tattooist.nickname }}
                             🤍 {{ follower_count }}
                         {% endif %}
                     </button></a>
+                    {% if request.user.is_authenticated %}
+                    {# 로그인한 유저에게만 쪽지 보내기 버튼이 보임 #}
                     <a href="{% url 'message' request.user.id tattooist.id %}"><button>쪽지 보내기</button></a>
+                    {% endif %}
                     {% if review_possible %}
                         {# 리뷰 작성이 가능한 경우 #}
                         <a href="{% url 'create_review' tattooist.id %}"><button>리뷰 작성하기</button></a>
