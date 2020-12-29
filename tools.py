@@ -39,3 +39,7 @@ def parse_dict_from_code_pair(pairs: tuple):
 # key와 value가 바뀐 dictionary를 return
 def reversed_dict(d: dict):
     return {value:key for key, value in d.items()}
+
+# tuple pair을 key-value dict쌍으로 변환:
+def tuple_pair_to_dict(t: tuple) -> dict:
+    return {pair[0]:pair[1] for pair in t}
