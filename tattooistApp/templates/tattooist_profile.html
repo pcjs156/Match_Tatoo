@@ -17,8 +17,8 @@ Profile of {{ tattooist.nickname }}
         </section>
     {% else %} {# else: not is_tattooist #}
     {# 해당 유저가 타투이스트인 경우 #}
-        <header style="display: flex; margin-left: 60%;">
-            <div style="flex-direction:column">
+        <header style="display: flex; margin-left: 35rem;">
+            <div style="flex-direction:column;">
             <p style="text-align:right; font-size:1.5rem;">{{ tattooist.nickname }}</p>
             {% if is_owner %}
                 {# 해당 페이지의 주인인 경우 #}
@@ -55,7 +55,7 @@ Profile of {{ tattooist.nickname }}
             </p>
             </div>
             <p>
-                <img style="width: 10rem; height: 10rem; border-radius: 50%; margin-left: 15%;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+                <img style="width: 10rem; height: 10rem; border-radius: 50%; margin-left: 1rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
             </p>
             
         </header>
