@@ -11,55 +11,119 @@
 
 {% block content %}
 <section>
-    <p>
-        <p>매칭 이미지</p>
-        <img src="{{ matching.image.url }}" alt="매칭 이미지">
-    </p>
+    <div class="tile is-ancestor">
+        <div class="tile is-vertical">
+            <div class="tile">
+                <div class="tile is-parent is-5">
+                <article class="tile is-child">
+                    <img style="object-fit:cover;width:50vmin;height: 50vmin;border-radius: 5px" src="{{ matching.image.url }}" alt="매칭 이미지">
+                </article>
+                </div>
+                
+                <div class="tile is-vertical">
 
-    <p>작성자: {{ tattooist.nickname }}</p>
-    <p>작성일: {{ matching.pub_date }}</p>
+                <div class="tile is-parent">
+                    <article class="tile is-child">
+                        <div class="columns">
+                            <div class="column">
+                                <p>
+                                    <a href="{% url 'matching_like_pressed' matching.id %}">
+                                        {% if not user_like %}
+                                        {# 현재 접속한 유저가 좋아요를 누른 경우 #}
+                                        <button class="button is-danger is-inverted is-outlined is-small">매칭 찜하기 · {{ like_message }}⠀<i class="far fa-hand-paper"></i></button>
+                                        {% else %}
+                                        <button class="button is-danger is-inverted is-outlined is-small">찜하기 취소 · {{ like_message }}⠀<i class="far fa-hand-paper"></i></button>
+                                        {% endif %}
+                                        
+                                    </a>
+                                    
+                                </p>
+                                    
+                            </div>
 
-    <p>제목: {{ matching.title }}</p>
-    <p>지역: {{ matching.get_region }} {{ matching.region_detail }}</p>
-    <p>부위: {{ matching.get_part }}</p>
-    <p>유형: {{ matching.get_tattoo_type }}</p>
-    <p>가격: {{ matching.price }}원</p>
-    <p>
-        <p>본문</p>
-        <p>{{ matching.description }}</p>
-    </p>
+                            <div class="column " style="text-align: right;">
+                                <a href="{% url 'follow_pressed' tattooist.id %}"><button class="button is-danger is-inverted is-outlined" style="border-color: black;">
+                                    {% if now_following %}
+                                        ❤ {{ follower_count }}
+                                    {% else %}
+                                        🤍 {{ follower_count }}
+                                    {% endif %}
+                                </button></a>
+
+                                ·⠀{{ tattooist.nickname }}⠀
+                                <img style="object-fit:cover;width:5vmin;height: 5vmin;border-radius: 5vmin;margin-right: 5px;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+                                    
+
+
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="tile" style="font-size: smaller;">
+                    <div class="tile is-parent">
+                    <article class="tile is-child">
+                        <p class="label is-white" style="color: white;">{{ matching.title }}</p>
+                        <p>{{ matching.description }}</p>
+                    </article>
+                    </div>
+                    <div class="tile is-parent">          
+                    <article class="tile is-child">
+
+                        <div>
+                            <p class="label is-white">작성일<p>
+                            <div>{{ matching.pub_date }}</div>
+                        </div>
+<br>
+                        <div>
+                            <p class="label is-white">지역</p>
+                            <div>
+                                {{ matching.get_region }} {{ matching.region_detail }}
+                            </div>
+                        </div>
+<br>
+                        <div>
+                            <p class="label is-white">부위</p>
+                            <div>
+                                {{ matching.get_part }}
+                            </div>
+                        </div>
+<br>
+                        <div>
+                            <p class="label is-white">유형</p>
+                            <div>
+                                {{ matching.get_tattoo_type }}
+                            </div>
+                        </div>
+<br>
+                        <div>
+                            <p class="label is-white">가격</p>
+                            <div>
+                                {{ matching.price }}원
+                            </div>
+                        </div>
+
+                    </article>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 
-<hr>
 
 <section>
-    <p>
-        {{ matching.author.nickname }}
-        <a href="{% url 'follow_pressed' matching.author.id %}"><button>
-            {% if now_following %}
-                ❤ {{ follower_count }}
-            {% else %}
-                🤍 {{ follower_count }}
-            {% endif %}
-        </button></a>
-    </p>
-    <p>{{ like_message }}</p>
-    <p>
-        <a href="{% url 'matching_like_pressed' matching.id %}">
-            {% if not user_like %}
-            {# 현재 접속한 유저가 좋아요를 누른 경우 #}
-            찜하기
-            {% else %}
-            찜 취소
-            {% endif %}
-        </a>
-    </p>
+
+
 
     <br>
     {% if is_author %}
         <p><a href={% url "modify_matching" tattooist_id=matching.author.id matching_id=matching.id %}>수정하기</a></p>
         <p><a href={% url "delete_matching" tattooist_id=matching.author.id matching_id=matching.id %}>삭제하기</a></p>
     {% endif %}
-    <p><a href={% url "matching_list" %}>목록으로 가기</a></p>
+    <p><a href={% url "matching_list" %}> <i class="fas fa-arrow-left"></i> 매칭 리스트로</a></p>
 </section>
 {% endblock %}

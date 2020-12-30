@@ -31,9 +31,9 @@ def detail_matching_view(request, tattooist_id: int, matching_id: int):
 
     likers = [customer.nickname for customer in matching.likers.all()]
     if len(likers) == 0:
-        like_message = "아직 찜 되지 않았습니다."
+        like_message = "0"
     else:
-        like_message = f"{len(likers)}명의 유저가 해당 매칭을 찜 하셨습니다."
+        like_message = f"{len(likers)}"
     content["like_message"] = like_message
 
     # 현재 유저가 해당 게시물을 찜했는지 확인
