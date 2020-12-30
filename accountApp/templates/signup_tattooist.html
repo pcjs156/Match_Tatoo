@@ -12,6 +12,9 @@ TATTOOIST SIGNUP
 
 {% block content %}
 <section>
+    <p style="text-align: center;">타투이스트 계정 등록</p>
+    <hr>
+    <br>
     {% if messages %}
         {% for message in messages %}
             {% if message.tags %} <script>alert("{{ message }}")</script> {% endif %}
@@ -25,71 +28,87 @@ TATTOOIST SIGNUP
 
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <p>
-            <span>
-                ID
-                {% if not validity_check.username %}
-                <span class="error_message">이미 사용중인 ID입니다.</span>
-                {% endif %}
-            </span>
-            {{ form.username }}
-        </p>
-        <p>
-            <span>
-                PW
-                {% if not validity_check.password %}
-                <span class="error_message">패스워드가 일치하지 않습니다.</span>
-                {% endif %}
-            </span>
+        <div class="columns">
+            <div class="column">
+                <p>
+                    <span>
+                        <label class="label is-white">ID</label>
+                        {% if not validity_check.username %}
+                        <span class="error_message">이미 사용중인 ID입니다.</span>
+                        {% endif %}
+                    </span>
+                    {{ form.username }}
+                </p>
 
-            {{ form.password1 }}
-        </p>
-        <p>
-            <span>PW Check </span>
-            {{ form.password2 }}
-        </p>
-        <p>
-            <span>
-                Nickname
-                {% if not validity_check.nickname %}
-                <span class="error_message">이미 사용중인 닉네임입니다.</span>
-                {% endif %}
-            </span>
-            {{ form.nickname }}
-        </p>
-        <p>
-            <span>
-                Email
-                {% if not validity_check.email %}
-                <span class="error_message">이미 사용중인 이메일입니다.</span>
-                {% endif %}
-            </span>
-            {{ form.email }}
-            <span>이메일 수신 동의 {{ form.mailing_agreement }}</span>
-        </p>
-        <p>
-            <span>
-                Shop Location
-            </span>
-            {{ form.location }}
-        </p>
-        <p>
-            <span>
-                Contact
-            </span>
-            {{ form.contact }}
-        </p>
-        <p>
-            <div> Profile Image </div>
-            {{ form.user_image }}
-        </p>
-        <p>
-            <div>Introduce</div>
-            {{ form.introduce }}
-        </p>
+                <p>
+                    <span>
+                        <label class="label is-white">PW</label>
+                        {% if not validity_check.password %}
+                        <span class="error_message">패스워드가 일치하지 않습니다.</span>
+                        {% endif %}
+                    </span>
 
-        <p>아래 버튼을 누르시면 계정 등록만 완료되고, 다음 페이지의 카카오톡 로그인을 완료하셔야 로그인이 가능합니다.</p>
-        <input type="submit" value="회원가입">
+                    {{ form.password1 }}
+                </p>
+
+                <p>
+                    <span><label class="label is-white">PW Check</label></span>
+                    {{ form.password2 }}
+                </p>
+
+
+                <p>
+                    <span>
+                        <label class="label is-white">Nickname</label>
+                        {% if not validity_check.nickname %}
+                        <span class="error_message">이미 사용중인 닉네임입니다.</span>
+                        {% endif %}
+                    </span>
+                    {{ form.nickname }}
+                </p>
+
+                <p>
+                    <span>
+                        <label class="label is-white">Email</label>
+                        {% if not validity_check.email %}
+                        <span class="error_message">이미 사용중인 이메일입니다.</span>
+                        {% endif %}
+                    </span>
+                    {{ form.email }}
+                    <span>이메일 수신 동의 {{ form.mailing_agreement }}</span>
+                </p>
+            </div>
+
+            <div class="column">
+                <p>
+                    <span>
+                        <label class="label is-white">Shop Location</label>
+                    </span>
+                    {{ form.location }}
+                </p>
+
+                <p>
+                    <span>
+                        <label class="label is-white">Contact</label>
+                    </span>
+                    {{ form.contact }}
+                </p>
+
+                <p>
+                    <div><label class="label is-white">Profile Image</label></div>
+                    {{ form.user_image }}
+                </p>
+                <p>
+                    <div><label class="label is-white">Introduce</label></div>
+                    {{ form.introduce }}
+                </p>
+
+                <p style="color:gray">아래 버튼을 누르면 <b style="color: white;">계정 등록</b>이 완료됩니다.<br>
+                    회원가입을 위해서 다음 페이지의 <b style="color: white;">카카오톡 로그인</b>을 완료해주세요.</p>
+                <input type="submit" value="카카오로 인증하기">
+            </div>
+        </div>
     </form>
+    <br>
 </section>
 {% endblock %}
