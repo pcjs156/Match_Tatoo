@@ -12,18 +12,27 @@
 
 {% block content %}
 <section>
-    <p>게시물 작성하기</p>
+    <p>포트폴리오 작성하기</p>
     <form method="POST" action="{% url 'create_portfolio' %} " enctype="multipart/form-data">
         {% csrf_token %}
-        <p>
-            <p>사진</p>
-            <p>{{ form.portfolio_image }}</p>
-        </p>
 
-        <p>
-            <p>본문</p>
-            <p>{{ form.description }}</p>
-        </p>
+        <div class="columns">
+            <div class="column">
+                <p>
+                    <p>이미지</p>
+                    <p>{{form.portfolio_image}}</p>
+                </p>
+            </div>
+
+            <div class="column">
+                <p>
+                    <p>본문</p>
+                    <p>{{ form.description }}</p>
+                </p>
+            </div>
+        </div>
+
+
         <input type="submit" value="작성 완료">
     </form>
 </section>

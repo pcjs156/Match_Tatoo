@@ -247,11 +247,16 @@ def modify_portfolio_view(request, tattooist_id: int, portfolio_id: int):
 
         if form.is_valid():
             updated_portfolio = form.save(commit=False)
-
-            portfolio.author = updated_portfolio.author
-            portfolio.portfolio_image = updated_portfolio.portfolio_image
             portfolio.pub_date = datetime.now()
             portfolio.description = updated_portfolio.description
+
+            try:
+                updated_image = request.FILES["portfolio_image"]
+            # 이미지가 변경되지 않을 경우 기존 이미지를 그대로 사용
+            except MultiValueDictKeyError:
+                pass
+            else:
+                portfolio.portfolio_image = updated_image
 
             portfolio.save()
             return redirect("detail_portfolio", tattooist_id, portfolio_id)
