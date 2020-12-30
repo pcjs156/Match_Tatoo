@@ -109,10 +109,10 @@ MATCHING LIST
     {# 데이터가 있는 경우 #}
     {% if result_matching_list %}
     <!-- 4개 넘어가면 아랫줄로 넘어가게 하는 건 어떻게 하지 -->
-    <div class="columns is-mobile">
+    <div class="container">
         {% for matching in result_matching_list %}
-            <a href="{% url 'detail_matching' tattooist_id=matching.author.id matching_id=matching.id %}" class="column is-3">
-                <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px" src="{{ matching.image.url }}" alt="매칭 이미지" style="width: 20rem; height: 20rem;">
+            <a href="{% url 'detail_matching' tattooist_id=matching.author.id matching_id=matching.id %}">
+                <img style="object-fit:cover;width:26vmin;height: 27vmin;border-radius: 5px" src="{{ matching.image.url }}" alt="매칭 이미지" style="width: 25rem; height: 20rem;">
             </a>
         {% endfor %}
     </div>   
