@@ -17,59 +17,58 @@ MESSAGE BOX
     <div>search bar</div>
     <hr> -->
 
-    <hr>
+    <hr><hr>
     {% if request.user.is_tattooist %}
-    {% if not no_new_message %}
-    <p>신규 메세지</p>
+    <p style="text-align: center;">읽지 않은 신규 메세지</p>
     <hr>
     {% for first_tmessage, last_tmessage in tmessages %}
-    <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_tmessage.customer.id %}'">
-        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_tmessage.customer.user_image.url }}" alt="{{ first_tmessage.customer }}의 프로필 사진">
-        <br> 수신자 : {{first_tmessage.customer.nickname}}
-        <br> 내용 : {{last_tmessage.description}}
-        <br> 마지막 대화시간 : {{last_tmessage.send_datetime|timesince}} 전
+    <div style="width: 80rem; border:1px solid black; display:grid; grid-template-columns: 1fr 1fr 1fr;" onclick="location.href='{% url 'message' request.user.id first_tmessage.customer.id %}'">
+        <div style="margin-left: 3rem;">
+            <img style="width: 7rem; height: 7rem; border-radius: 50%;" src="{{ first_tmessage.customer.user_image.url }}" alt="{{ first_tmessage.customer }}의 프로필 사진">
+            <span style="margin-left: 1rem;">{{first_tmessage.customer.nickname}}</span>
+        </div>
+        <div style="margin-top: 10%;">
+            <span>{{last_tmessage.description}}</span>
+        </div>
+        <div style="margin-top: 9%;">
+            <span>{{last_tmessage.send_datetime|timesince}} 전</span>
+        </div>
     </div><hr>
     {% endfor %}
-    {%endif%}
 
+    <hr>
     {% for first_message, last_message in messages %}
-    <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.customer.id %}'">
-        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.customer.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
-        <br> 수신자 : {{first_message.customer.nickname}}
-        <br> 내용 : {{last_message.description}}
-        <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
+    <div style="width: 80rem; border:1px solid black; display:grid; grid-template-columns: 1fr 1fr 1fr;" onclick="location.href='{% url 'message' request.user.id first_message.customer.id %}'">
+        <div style="margin-left: 3rem;">
+            <img style="width: 7rem; height: 7rem; border-radius: 50%;" src="{{ first_message.customer.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
+            <span style="margin-left: 1rem;">{{first_message.customer.nickname}}</span>
+        </div>
+        <div style="margin-top: 10%;">
+            <span>{{last_message.description}}</span>
+        </div>
+        <div style="margin-top: 9%;">
+            <span>{{last_message.send_datetime|timesince}} 전</span>
+        </div>
     </div> <hr>
     {% endfor %}
 
     <!-- 사용자가 Customer 이면 -->
     {% else%}
     {% for first_message, last_message in messages %}
-    <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.tattooist.id %}'">
-        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.tattooist.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
-        <br> 수신자 : {{first_message.tattooist.nickname}}
-        <br> 내용 : {{last_message.description}}
-        <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
-    </div>
+    <div style="width: 80rem; border:1px solid black; display:grid; grid-template-columns: 1fr 1fr 1fr;" onclick="location.href='{% url 'message' request.user.id first_message.tattooist.id %}'">
+        <div style="margin-left: 3rem;">
+            <img style="width: 7rem; height: 7rem; border-radius: 50%;" src="{{ first_message.tattooist.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
+            <span style="margin-left: 1rem;">{{first_message.tattooist.nickname}}</span>
+        </div>
+        <div style="margin-top: 10%;">
+            <span>{{last_message.description}}</span>
+        </div>
+        <div style="margin-top: 3.5%;">
+            <span><br> {{last_message.send_datetime|timesince}} 전</span>
+        </div>
+    </div> <hr>
     {% endfor %}
     {% endif%}
 
-    {% for first_message, last_message in messages %}
-        {% if request.user.is_tattooist %}
-        <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.customer.id %}'">
-            <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.customer.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
-            <br> 수신자 : {{first_message.customer.nickname}}
-            <br> 내용 : {{last_message.description}}
-            <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
-        </div>
-        {% else %}
-        <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.tattooist.id %}'">
-            <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.tattooist.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
-            <br> 수신자 : {{first_message.tattooist.nickname}}
-            <br> 내용 : {{last_message.description}}
-            <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
-        </div>
-        {%endif%}
-    {% endfor %}
-        
 </section>
 {% endblock %}
