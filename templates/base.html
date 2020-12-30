@@ -94,7 +94,7 @@
         <nav style="text-align: right; position:relative; bottom:5%;">
             
             {% if request.user.is_authenticated %}
-            <span><img style="object-fit:cover;width:5vmin;height: 5vmin;border-radius: 5vmin;margin-right: 5px;" src="{{ user_profile_image_url }}" alt="{{ nickname }}님의 프로필 이미지"> {{ request.user.username }}
+            <span><img style="object-fit:cover;width:5vmin;height: 5vmin;border-radius: 5vmin;margin-right: 5px;" src="{{request.user.user_image.url}}" alt="{{ nickname }}님의 프로필 이미지"> {{ request.user.username }}
                 [
                     {% if request.user.nickname %}
                     {{request.user.nickname }}
