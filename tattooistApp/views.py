@@ -195,7 +195,6 @@ def messagebox_view(request):
     content = dict()
 
     array = set()
-    # times = []
     for m in Message.objects.filter(Q(customer=request.user.id)):
         array.add(m.tattooist.id)
 
@@ -208,12 +207,28 @@ def messagebox_view(request):
                                          Q(tattooist=request.user.id, customer=tattooist_id)).last()
         first_messages.append(first_message)
         last_messages.append(last_message)
-        # times.append(datetime.now(timezone.utc) - message.send_datetime)
 
     messages = zip(first_messages, last_messages)
     content["messages"] = messages
-    # content["times"] = times
-        
+    
+    tarray = set()
+    for t in Message.objects.filter(Q(tattooist=request.user.id)):
+        tarray.add(t.customer.id)
+
+    first_tmessages = []
+    last_tmessages = []
+    for customer_id in tarray:
+        if not Message.objects.filter(Q(tattooist=customer_id, customer=request.user.id)).exists():
+            first_tmessage = Message.objects.filter(Q(tattooist=request.user.id, customer=customer_id)).first()
+            last_tmessage = Message.objects.filter(Q(tattooist=request.user.id, customer=customer_id)).last()
+            first_tmessages.append(first_tmessage)
+            last_tmessages.append(last_tmessage)
+    tmessages = zip(first_tmessages, last_tmessages)
+    content["tmessages"] = tmessages
+
+    if Message.objects.filter(Q(tattooist=customer_id, customer=request.user.id)).exists():
+        content["no_new_message"] = True
+
     return render(request, "messagebox.html", content)
 
 # 포트폴리오를 수정하는 페이지
