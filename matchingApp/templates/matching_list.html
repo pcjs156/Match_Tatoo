@@ -21,98 +21,106 @@ MATCHING LIST
             <form action="{% url 'matching_list' %}" method="GET">
                 <div class="columns" style="background-color: rgb(22,22,22);text-align: center;">
 
-                <div class="column is-1" style="font-size: smaller;margin-top: 3px;">
-                    상세 검색
-                </div>
+                    <div class="column is-1" style="font-size: smaller;margin-top: 3px;">
+                        상세 검색
+                    </div>
 
-                <div class="column is-1">
-                <select name="region" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);float:right;text-align: right;">
-                    <option value="전체" selected>지역</option>
-                    <option value="서울특별시">서울특별시</option>
-                    <option value="부산광역시">부산광역시</option>
-                    <option value="대구광역시">대구광역시</option>
-                    <option value="인천광역시">인천광역시</option>
-                    <option value="광주광역시">광주광역시</option>
-                    <option value="울산광역시">울산광역시</option>
-                    <option value="세종특별자치시">세종특별자치시</option>
-                    <option value="경기도">경기도</option>
-                    <option value="강원도">강원도</option>
-                    <option value="충청북도">충청북도</option>
-                    <option value="충청남도">충청남도</option>
-                    <option value="경상북도">경상북도</option>
-                    <option value="경상남도">경상남도</option>
-                    <option value="제주특별자치도">제주특별자치도</option>
-                </select>
-                </div>
+                    <div class="column is-1">
+                    <select name="region" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);float:right;text-align: right;">
+                        <option value="전체" selected>지역</option>
+                        <option value="서울특별시">서울특별시</option>
+                        <option value="부산광역시">부산광역시</option>
+                        <option value="대구광역시">대구광역시</option>
+                        <option value="인천광역시">인천광역시</option>
+                        <option value="광주광역시">광주광역시</option>
+                        <option value="울산광역시">울산광역시</option>
+                        <option value="세종특별자치시">세종특별자치시</option>
+                        <option value="경기도">경기도</option>
+                        <option value="강원도">강원도</option>
+                        <option value="충청북도">충청북도</option>
+                        <option value="충청남도">충청남도</option>
+                        <option value="경상북도">경상북도</option>
+                        <option value="경상남도">경상남도</option>
+                        <option value="제주특별자치도">제주특별자치도</option>
+                    </select>
+                    </div>
 
-                <div class="column is-1">
-                <select name="tattoo_type" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);text-align:right;">
-                    <option value="전체" selected>장르</option>
-                    <option value="이레즈미">이레즈미</option>
-                    <option value="블랙앤그레이">블랙앤그레이</option>
-                    <option value="올드스쿨">올드스쿨</option>
-                    <option value="뉴스쿨">뉴스쿨</option>
-                    <option value="뉴재패니즈투">뉴재패니즈투</option>
-                    <option value="레터링">레터링</option>
-                    <option value="인물타투">인물타투</option>
-                    <option value="라인워크">라인워크</option>
-                    <option value="미니타투">미니타투</option>
-                    <option value="기타">기타</option>
-                </select>
-                </div>
+                    <div class="column is-1">
+                    <select name="tattoo_type" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);text-align:right;">
+                        <option value="전체" selected>장르</option>
+                        <option value="이레즈미">이레즈미</option>
+                        <option value="블랙앤그레이">블랙앤그레이</option>
+                        <option value="올드스쿨">올드스쿨</option>
+                        <option value="뉴스쿨">뉴스쿨</option>
+                        <option value="뉴재패니즈투">뉴재패니즈투</option>
+                        <option value="레터링">레터링</option>
+                        <option value="인물타투">인물타투</option>
+                        <option value="라인워크">라인워크</option>
+                        <option value="미니타투">미니타투</option>
+                        <option value="기타">기타</option>
+                    </select>
+                    </div>
 
-                <div class="column is-1">
-                <select name="part" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);text-align:right;">
-                    <option value="전체" selected>부위</option>
-                    <option value="머리">머리</option>
-                    <option value="쇄골">쇄골</option>
-                    <option value="목">목</option>
-                    <option value="어깨">어깨</option>
-                    <option value="가슴">가슴</option>
-                    <option value="명치">명치</option>
-                    <option value="옆구리">옆구리</option>
-                    <option value="배">배</option>
-                    <option value="윗팔등">윗팔등</option>
-                    <option value="팔등">팔등</option>
-                    <option value="팔꿈치">팔꿈치</option>
-                    <option value="손등">손등</option>
-                    <option value="손날">손날</option>
-                    <option value="손가락">손가락</option>
-                    <option value="무릎">무릎</option>
-                    <option value="허벅지">허벅지</option>
-                    <option value="종아리">종아리</option>
-                    <option value="발등">발등</option>
-                    <option value="기타">기타</option>
-                </select>
-                </div>
+                    <div class="column is-1">
+                    <select name="part" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);text-align:right;">
+                        <option value="전체" selected>부위</option>
+                        <option value="머리">머리</option>
+                        <option value="쇄골">쇄골</option>
+                        <option value="목">목</option>
+                        <option value="어깨">어깨</option>
+                        <option value="가슴">가슴</option>
+                        <option value="명치">명치</option>
+                        <option value="옆구리">옆구리</option>
+                        <option value="배">배</option>
+                        <option value="윗팔등">윗팔등</option>
+                        <option value="팔등">팔등</option>
+                        <option value="팔꿈치">팔꿈치</option>
+                        <option value="손등">손등</option>
+                        <option value="손날">손날</option>
+                        <option value="손가락">손가락</option>
+                        <option value="무릎">무릎</option>
+                        <option value="허벅지">허벅지</option>
+                        <option value="종아리">종아리</option>
+                        <option value="발등">발등</option>
+                        <option value="기타">기타</option>
+                    </select>
+                    </div>
 
-                <div class="column is-1" style="margin:0; height: 9px;position: relative;bottom:3px; line-height: 10px;">
-                    <label class="box-radio-input"><input type="radio" name="order-by" value="pub_date" style="font-size: small;" checked><span>최신순</span></label>
-                    <label class="box-radio-input"><input type="radio" name="order-by" value="price"><span>가격순</span></label>
-                </div>
+                    <div class="column is-1" style="margin:0; height: 9px;position: relative;bottom:3px; line-height: 10px;">
+                        <label class="box-radio-input"><input type="radio" name="order-by" value="pub_date" style="font-size: small;" checked><span>최신순</span></label>
+                        <label class="box-radio-input"><input type="radio" name="order-by" value="price"><span>가격순</span></label>
+                    </div>
 
-                <div class="column is-1">
-                    <input class="button is-rounded is-dark is-small" type="submit" value="검색">
-                </div>
-                <div class="column">
-                    <a class="button is-rounded is-dark is-small" style="float: right;" href="{% url 'matching_list' %}?region=all&tattoo_type=all&part=all&orderby=pub_date">타투 매칭 전체 보기</a>
-                </div>
+                    <div class="column is-1">
+                        <input class="button is-rounded is-dark is-small" type="submit" value="검색">
+                    </div>
+
+                    <div class="column">
+                        <a class="button is-rounded is-dark is-small" style="float: right;" href="{% url 'matching_list' %}?region=all&tattoo_type=all&part=all&orderby=pub_date">타투 매칭 전체 보기</a>
+                    </div>
+
+                    {% if is_tattooist %}
+                    <div class="column is-2">
+                        <a href="{% url 'create_matching' %}" class="button is-rounded is-light is-small">매칭 작성하기</a>
+                    </div>
+                    {% endif %}
+                    
                 </div>
             </form>
-        </div>
 
 
-            <div class="column" style="text-align: right;font-size:smaller;margin-top: 1em;">검색된 조건 : {{ region_now }} / {{ tattoo_type_now }} / {{ part_now }} / {{ orderby_now }}</div>
+
+            <div class="column" style="font-size:smaller;position: relative;right:10px">검색된 조건 : {{ region_now }} / {{ tattoo_type_now }} / {{ part_now }} / {{ orderby_now }}</div>
 
     </p>
 
     {# 데이터가 있는 경우 #}
     {% if result_matching_list %}
     <!-- 4개 넘어가면 아랫줄로 넘어가게 하는 건 어떻게 하지 -->
-    <div class="container">
+    <div>
         {% for matching in result_matching_list %}
             <a href="{% url 'detail_matching' tattooist_id=matching.author.id matching_id=matching.id %}">
-                <img style="object-fit:cover;width:26vmin;height: 27vmin;border-radius: 5px" src="{{ matching.image.url }}" alt="매칭 이미지" style="width: 25rem; height: 20rem;">
+                <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px;margin-right: 1em; margin-bottom: 1em;" src="{{ matching.image.url }}" alt="매칭 이미지" style="width: 25rem; height: 20rem;">
             </a>
         {% endfor %}
     </div>   
@@ -151,8 +159,6 @@ MATCHING LIST
         <div>조건에 맞는 매칭이 존재하지 않습니다.</div>
     {% endif %}
 
-    {% if is_tattooist %}
-        <a href="{% url 'create_matching' %}">매칭 작성하기</a>
-    {% endif %}
+
 </section>
 {% endblock %}
