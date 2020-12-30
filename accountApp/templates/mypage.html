@@ -27,8 +27,13 @@ MYPAGE
         <div style="flex-direction:column;">
             <div style="text-align:right; font-size:1.5rem;">{{ nickname }}</div>
             <div style="margin-top: 10px; margin-left: 5.3rem;">
-                <a href="{%url 'messagebox'%}"><button class="button is-black is-inverted is-outlined" style="margin-right: 10px;">쪽지함</button></a>
-                <a href=""><button class="button is-black is-inverted is-outlined">프로필 편집</button></a>
+                {%if request.user.is_tattooist %}
+                    <a href="{%url 'messagebox'%}"><button class="button is-black is-inverted is-outlined" style="margin-right: 10px;">쪽지함</button></a>
+                    <a href="{%url 'create_matching'%}"><button class="button is-black is-inverted is-outlined">매칭 작성</button></a>
+                {% else %}
+                    <a href="{%url 'messagebox'%}"><button class="button is-black is-inverted is-outlined" style="margin-left: 6.8rem;">쪽지함</button></a>
+                {% endif %}
+                
             </div>
             <div style="margin-top: 5%;">
                 <span>찜한 공고 <a href="?menu=matching">{{ liked_matchings_cnt }}개</a> | </span>

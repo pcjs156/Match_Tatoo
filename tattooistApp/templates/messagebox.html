@@ -18,6 +18,40 @@ MESSAGE BOX
     <hr> -->
 
     <hr>
+    {% if request.user.is_tattooist %}
+    {% if not no_new_message %}
+    <p>신규 메세지</p>
+    <hr>
+    {% for first_tmessage, last_tmessage in tmessages %}
+    <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_tmessage.customer.id %}'">
+        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_tmessage.customer.user_image.url }}" alt="{{ first_tmessage.customer }}의 프로필 사진">
+        <br> 수신자 : {{first_tmessage.customer.nickname}}
+        <br> 내용 : {{last_tmessage.description}}
+        <br> 마지막 대화시간 : {{last_tmessage.send_datetime|timesince}} 전
+    </div><hr>
+    {% endfor %}
+    {%endif%}
+
+    {% for first_message, last_message in messages %}
+    <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.customer.id %}'">
+        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.customer.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
+        <br> 수신자 : {{first_message.customer.nickname}}
+        <br> 내용 : {{last_message.description}}
+        <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
+    </div> <hr>
+    {% endfor %}
+
+    <!-- 사용자가 Customer 이면 -->
+    {% else%}
+    {% for first_message, last_message in messages %}
+    <div style="width: 80rem; border:1px solid black" onclick="location.href='{% url 'message' request.user.id first_message.tattooist.id %}'">
+        <img style="width: 5rem; height: 5rem; border-radius: 50%;" src="{{ first_message.tattooist.user_image.url }}" alt="{{ first_message.customer }}의 프로필 사진">
+        <br> 수신자 : {{first_message.tattooist.nickname}}
+        <br> 내용 : {{last_message.description}}
+        <br> 마지막 대화시간 : {{last_message.send_datetime|timesince}} 전
+    </div>
+    {% endfor %}
+    {% endif%}
 
     {% for first_message, last_message in messages %}
         {% if request.user.is_tattooist %}
