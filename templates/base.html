@@ -94,14 +94,14 @@
         <nav style="text-align: right; position:relative; bottom:5%;">
             
             {% if request.user.is_authenticated %}
-            <span><img style="object-fit:cover;width:5vmin;height: 5vmin;border-radius: 5vmin;margin-right: 5px;" src="{{request.user.user_image.url}}" alt="{{ nickname }}님의 프로필 이미지"> {{ request.user.username }}
-                [
+            <span><img style="object-fit:cover;width:5vmin;height: 5vmin;border-radius: 5vmin;margin-right: 5px;" src="{{request.user.user_image.url}}" alt="{{ nickname }}님의 프로필 이미지">
+                
                     {% if request.user.nickname %}
                     {{request.user.nickname }}
                     {% else %}
-                    <span style="color: red;">ERROR: 닉네임 미설정</span>
+                    <span style="color: red;">[ERROR: 닉네임 미설정]</span>
                     {% endif %}
-                ]
+                
             </span>
             │
             <span>
