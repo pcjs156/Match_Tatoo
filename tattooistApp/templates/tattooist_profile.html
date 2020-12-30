@@ -17,50 +17,78 @@ Profile of {{ tattooist.nickname }}
         </section>
     {% else %} {# else: not is_tattooist #}
     {# 해당 유저가 타투이스트인 경우 #}
+    <div class="column is-offset-5">
+        <div class="tile is-ancestor">
+            <div class="tile is-7 is-vertical is-parent" style="text-align: right; float: right;">
+
+                <div class="tile is-child">
+                    <p style="text-align:right; font-size:1.5rem;">{{ tattooist.nickname }}</p>
+                </div>
+
+                <div class="tile is-child">
+                    {% if is_owner %}
+                    {# 해당 페이지의 주인인 경우 #}
+                        <p>
+                            <a href="{% url 'create_portfolio' %}"><button class="button is-black is-inverted is-outlined is-small">포트폴리오 작성</button></a>
+                            <button class="button is-black is-inverted is-outlined is-small">프로필 편집</button>
+                        </p>
+                    {% else %} {# else: is_owner #}
+                        {# 해당 페이지의 주인이 아닐 경우 #}
+                        <div style="margin-top: 10px;">
+                            <a href="{% url 'follow_pressed' tattooist.id %}"><button class="button is-danger is-inverted is-outlined is-small" style="margin-right: 15px;">
+                                {% if now_following %}
+                                    ❤ {{ follower_count }}
+                                {% else %}
+                                    🤍 {{ follower_count }}
+                                {% endif %}
+                            </button></a>
+                            {% if request.user.is_authenticated %}
+                            {# 로그인한 유저에게만 쪽지 보내기 버튼이 보임 #}
+                            <a href="{% url 'message' request.user.id tattooist.id %}"><button class="button is-black is-inverted is-outlined is-small" style="margin-right: 15px;">쪽지 보내기</button></a>
+                            {% endif %}
+                            {% if review_possible %}
+                                {# 리뷰 작성이 가능한 경우 #}
+                                <a href="{% url 'create_review' tattooist.id %}"><button class="button is-black is-inverted is-outlined is-small">리뷰 작성하기</button></a>
+                            {% else %}
+                                {# 리뷰 작성이 불가능한 경우 #}
+                                <button disabled class="button is-black is-inverted is-outlined is-small">리뷰 작성 불가능</button>
+                            {% endif %}
+                        </div>
+                    {% endif %} {# endif: is_owner #}
+                </div>
+
+                <div class="tile is-child">
+                    <p style="text-align: right;">
+                        {{ tattooist.introduce }}
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="tile is-parent">
+                <div class="tile is-child" style="text-align: right;">
+                    <img style="object-fit:cover;width:30vmin;height: 30vmin; border-radius: 50%;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+                </div>
+            </div>
+        </div>
+    </div>
+
         <header style="display: flex; margin-left: 35rem;">
             <div style="flex-direction:column;">
-            <p style="text-align:right; font-size:1.5rem;">{{ tattooist.nickname }}</p>
-            {% if is_owner %}
-                {# 해당 페이지의 주인인 경우 #}
-                <p>
-                    <a href="{% url 'create_portfolio' %}"><button class="button is-black is-inverted is-outlined" style="margin-right: 15px;">포트폴리오 작성</button></a>
-                    <button class="button is-black is-inverted is-outlined">프로필 편집</button>
-                </p>
-            {% else %} {# else: is_owner #}
-                {# 해당 페이지의 주인이 아닐 경우 #}
-                <div style="margin-top: 10px;">
-                    <a href="{% url 'follow_pressed' tattooist.id %}"><button class="button is-danger is-inverted is-outlined" style="margin-right: 15px;">
-                        {% if now_following %}
-                            ❤ {{ follower_count }}
-                        {% else %}
-                            🤍 {{ follower_count }}
-                        {% endif %}
-                    </button></a>
-                    {% if request.user.is_authenticated %}
-                    {# 로그인한 유저에게만 쪽지 보내기 버튼이 보임 #}
-                    <a href="{% url 'message' request.user.id tattooist.id %}"><button class="button is-black is-inverted is-outlined" style="margin-right: 15px;">쪽지 보내기</button></a>
-                    {% endif %}
-                    {% if review_possible %}
-                        {# 리뷰 작성이 가능한 경우 #}
-                        <a href="{% url 'create_review' tattooist.id %}"><button class="button is-black is-inverted is-outlined">리뷰 작성하기</button></a>
-                    {% else %}
-                        {# 리뷰 작성이 불가능한 경우 #}
-                        <button disabled class="button is-black is-inverted is-outlined">리뷰 작성 불가능</button>
-                    {% endif %}
-                </div>
-            {% endif %} {# endif: is_owner #}
+            
+
             <br>
-            <p style="text-align: right;">
-                {{ tattooist.introduce }}
-            </p>
+
             </div>
             <p>
-                <img style="width: 10rem; height: 10rem; border-radius: 50%; margin-left: 1rem;" src="{{ tattooist.user_image.url }}" alt="{{ tattooist.nickname }}님의 프로필 이미지">
+                
             </p>
             
         </header>
 
-        <hr>
+
+
+
 
         <section>
             {# 화면 전환 #}
