@@ -21,53 +21,53 @@ MATCHING POST MODIFY
 
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <p>
-            <p>제목</p>
-            <p>{{ form.title }}</p>
-        </p>
-
-        <p>
-            <p>
-                <p>현재 이미지</p>
-                <img src="{{ image_url }}">
+        <div class="columns">
+            <div class="column">
                 <p>
-                    <p>변경 이미지</p>
-                    <input type="file" name="image" accept="image/*" id="id_image">
+                    <p>제목</p>
+                    <p>{{ form.title }}</p>
                 </p>
-            </p>
-        </p>
+                    
+                <p>
+                    <p>매칭 공고</p>
+                    <p>{{ form.description }}</p>
+                </p>
+                <p>
+                    <p>매칭 이미지</p>
+                    <p>{{ form.image }}</p>
+                </p>
+            </div>
 
-        <p>
-            <p>지역</p>
-            <p>{{ form.region }}</p>
-        </p>
+            <div class="column">
 
-        <p>
-            <p>지역 상세</p>
-            <p>{{ form.region_detail }}</p>
-        </p>
 
-        <p>
-            <p>타투 유형</p>
-            <p>{{ form.tattoo_type }}</p>
-        </p>
+                <p>
+                    <p>지역</p>
+                    <p>{{ form.region }}</p>
+                </p>
 
-        <p>
-            <p>타투 부위</p>
-            <p>{{ form.part }}</p>
-        </p>
+                <p>
+                    <p>지역 상세</p>
+                    <p>{{ form.region_detail }}</p>
+                </p>
 
-        <p>
-            <p>가격</p>
-            <p>{{ form.price }}</p>
-        </p>
+                <p>
+                    <p>타투 유형</p>
+                    <p>{{ form.tattoo_type }}</p>
+                </p>
 
-        <p>
-            <p>매칭 본문</p>
-            <p>{{ form.description }}</p>
-        </p>
+                <p>
+                    <p>타투 부위</p>
+                    <p>{{ form.part }}</p>
+                </p>
 
-        <input type="submit" value="작성 완료">
+                <p>
+                    <p>가격</p>
+                    <p>{{ form.price }}</p>
+                </p>
+                <input type="submit" value="작성 완료">
+            </div>
+        </div>
     </form>
 </section>
 {% endblock %}
