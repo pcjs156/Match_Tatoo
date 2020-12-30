@@ -16,12 +16,18 @@ MATCHING LIST
             {# 정해진 검색 조건이 아닌 값이 GET으로 들어온 경우 #}
             <div>비정상적인 접근입니다.</div>
         {% endif %}
-        <div><a href="{% url 'matching_list' %}?region=all&tattoo_type=all&part=all&orderby=pub_date">타투 매칭 전체 보기</a></div>
-        <div>현재 조건: {{ region_now }} / {{ tattoo_type_now }} / {{ part_now }} / {{ orderby_now }}</div>
-        <div>
+
+        
             <form action="{% url 'matching_list' %}" method="GET">
-                <select name="region">
-                    <option value="전체" selected>전체</option>
+                <div class="columns" style="background-color: rgb(22,22,22);text-align: center;">
+
+                <div class="column is-1" style="font-size: smaller;margin-top: 3px;">
+                    상세 검색
+                </div>
+
+                <div class="column is-1">
+                <select name="region" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);float:right;text-align: right;">
+                    <option value="전체" selected>지역</option>
                     <option value="서울특별시">서울특별시</option>
                     <option value="부산광역시">부산광역시</option>
                     <option value="대구광역시">대구광역시</option>
@@ -37,8 +43,11 @@ MATCHING LIST
                     <option value="경상남도">경상남도</option>
                     <option value="제주특별자치도">제주특별자치도</option>
                 </select>
-                <select name="tattoo_type">
-                    <option value="전체" selected>전체</option>
+                </div>
+
+                <div class="column is-1">
+                <select name="tattoo_type" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);text-align:right;">
+                    <option value="전체" selected>장르</option>
                     <option value="이레즈미">이레즈미</option>
                     <option value="블랙앤그레이">블랙앤그레이</option>
                     <option value="올드스쿨">올드스쿨</option>
@@ -50,8 +59,11 @@ MATCHING LIST
                     <option value="미니타투">미니타투</option>
                     <option value="기타">기타</option>
                 </select>
-                <select name="part">
-                    <option value="전체" selected>전체</option>
+                </div>
+
+                <div class="column is-1">
+                <select name="part" class="select is-small is-fullwidth" style="background-color: rgb(22,22,22); color: white; border-color: rgb(22,22,22);text-align:right;">
+                    <option value="전체" selected>부위</option>
                     <option value="머리">머리</option>
                     <option value="쇄골">쇄골</option>
                     <option value="목">목</option>
@@ -72,26 +84,39 @@ MATCHING LIST
                     <option value="발등">발등</option>
                     <option value="기타">기타</option>
                 </select>
-                <div>
-                    <div><input type="radio" name="order-by" value="price" checked> 가격순</div>
-                    <div><input type="radio" name="order-by" value="pub_date"> 최신순</div>
                 </div>
-                <div>
-                    <input type="submit" value="검색">
+
+                <div class="column is-1" style="margin:0; height: 9px;position: relative;bottom:3px; line-height: 10px;">
+                    <label class="box-radio-input"><input type="radio" name="order-by" value="pub_date" style="font-size: small;" checked><span>최신순</span></label>
+                    <label class="box-radio-input"><input type="radio" name="order-by" value="price"><span>가격순</span></label>
+                </div>
+
+                <div class="column is-1">
+                    <input class="button is-rounded is-dark is-small" type="submit" value="검색">
+                </div>
+                <div class="column">
+                    <a class="button is-rounded is-dark is-small" style="float: right;" href="{% url 'matching_list' %}?region=all&tattoo_type=all&part=all&orderby=pub_date">타투 매칭 전체 보기</a>
+                </div>
                 </div>
             </form>
         </div>
+
+
+            <div class="column" style="text-align: right;font-size:smaller;margin-top: 1em;">검색된 조건 : {{ region_now }} / {{ tattoo_type_now }} / {{ part_now }} / {{ orderby_now }}</div>
+
     </p>
 
     {# 데이터가 있는 경우 #}
     {% if result_matching_list %}
+    <!-- 4개 넘어가면 아랫줄로 넘어가게 하는 건 어떻게 하지 -->
+    <div class="columns is-mobile">
         {% for matching in result_matching_list %}
-            <div>
-                <a href="{% url 'detail_matching' tattooist_id=matching.author.id matching_id=matching.id %}">
-                    <img src="{{ matching.image.url }}" alt="매칭 이미지" style="width: 20rem; height: 20rem;">
-                </a>
-            </div>
+            <a href="{% url 'detail_matching' tattooist_id=matching.author.id matching_id=matching.id %}" class="column is-3">
+                <img style="object-fit:cover;width:30vmin;height: 30vmin;border-radius: 5px" src="{{ matching.image.url }}" alt="매칭 이미지" style="width: 20rem; height: 20rem;">
+            </a>
         {% endfor %}
+    </div>   
+
         <p>
             {# 페이지네이션 - 이전 #}
             {% if result_matching_list.has_previous %}

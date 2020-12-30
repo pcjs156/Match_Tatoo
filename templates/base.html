@@ -44,9 +44,36 @@
             margin-bottom:20px;
         }
 
-        /* 스크롤 트리거 */
+        /* matching_list.html에서 select 글자 오른쪽 정렬 */
+        select { text-align-last: right; }
+        option { direction: rtl; }
+
+        /* radio css */
+        .box-radio-input input[type="radio"]{
+        display:none;
+        }
+
+        .box-radio-input input[type="radio"] + span{
+        display:inline-block;
+        background:none;
+        text-align:center;
+        font-size:10px;
+        
+        cursor:pointer;
+        color:gray;
+        }
+
+        .box-radio-input input[type="radio"]:checked + span{
+        color:black;
+        background-color: #fff;
+        border-radius: 5px;
+        padding:3px;
+        
+        }
 
         @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css); 
+
+        /* 스크롤 트리거 */
 
     </style>
 
@@ -86,7 +113,7 @@
             </div>
             {% endif %}
         </nav>
-        <hr>
+<br>
 
   {% block content %}
   {% endblock %}
