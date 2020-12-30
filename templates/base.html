@@ -92,10 +92,9 @@
             <div style="text-align: left">
                 <img src="/static/match_logo.png" width="300px"height="100px" style="padding-top: 50px;" onclick="location.href='{% url 'main' %}' ">
         <nav style="text-align: right; position:relative; bottom:5%;">
-                <a href="{% url 'main' %}">MAIN</a>
             
             {% if request.user.is_authenticated %}
-            <span>접속한 유저: {{ request.user.username }}
+            <span><img style="object-fit:cover;width:5vmin;height: 5vmin;border-radius: 5vmin;margin-right: 5px;" src="{{ user_profile_image_url }}" alt="{{ nickname }}님의 프로필 이미지"> {{ request.user.username }}
                 [
                     {% if request.user.nickname %}
                     {{request.user.nickname }}
@@ -104,7 +103,7 @@
                     {% endif %}
                 ]
             </span>
-            /
+            │
             <span>
                 <a href="{% url 'logout' %}">로그아웃</a>
                 <a href="{% url 'mypage' %}?menu=matching">마이페이지</a>
